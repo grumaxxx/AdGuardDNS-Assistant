@@ -1,0 +1,17 @@
+.splash-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #fff;
+}
+
+.splash-logo {
+  width: 100px;
+  height: 100px;
+}
+
+.splash-spinner {
+  margin-top: 20px;
+}

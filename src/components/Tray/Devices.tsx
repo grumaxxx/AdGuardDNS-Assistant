@@ -104,8 +104,8 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
   };
 
   useEffect(() => {
-    setDevices(testDevices);
-    // getDevices();
+    // setDevices(testDevices);
+    getDevices();
   }, [refreshKey]);
 
   const handleSwitchChange = (index: number) => {

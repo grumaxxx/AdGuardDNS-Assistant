@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Form, Input, Button, Card } from 'antd';
-import Title from 'antd/es/skeleton/Title';
+import { useState, useEffect } from 'react';
+import { Form, Input, Button, Card, Spin, message } from 'antd';
 import axios from 'axios';
 import './Auth.css';
 import logo from './../logo.svg';
+import { AxiosError } from 'axios';
 
 interface LoginForm {
   username: string;
@@ -17,96 +17,123 @@ interface AccessToken {
   token_type: string;
 }
 
+interface ServerError {
+  error: string;
+  error_code: string;
+  error_description: string;
+}
+
 const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   setToken,
 }) => {
-  const [loginForm, setLoginForm] = useState<LoginForm>({
-    username: '',
-    password: '',
-  });
+  const [isTwoFactorRequired, setTwoFactorRequired] = useState(false);
+  const [loading, setLoading] = useState(false); // новое состояние
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setLoginForm({ ...loginForm, [name]: value });
+  const onFinish = async (values: { username: string; password: string }) => {
+    setLoading(true);
+    try {
+      const result = await axios.post(
+        'https://api.adguard-dns.io/oapi/v1/oauth_token',
+        {
+          username: values.username,
+          password: values.password,
+        },
+        {
+          headers: {
+            'Content-Type': `application/x-www-form-urlencoded`,
+          },
+        }
+      );
+
+      if ('access_token' in result.data) {
+        const data = result.data as AccessToken;
+        localStorage.setItem('access_token', data.access_token);
+        setToken(data.access_token); // Устанавливаем токен
+        console.log('Success:', values);
+      } else {
+        const errorData = result.data as ServerError;
+        throw errorData;
+      }
+    } catch (error) {
+      setLoading(false);
+      if (error && (error as AxiosError).response) {
+        const serverError = (error as AxiosError).response?.data as ServerError;
+        message.error(serverError.error_description);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const onFinish = (values: { username: string; password: string }) => {
-    setToken("asd");
-    // axios
-    //   .post(
-    //     'https://api.adguard-dns.io/oapi/v1/oauth_token',
-    //     {
-    //       username: loginForm.username,
-    //       password: loginForm.password,
-    //     },
-    //     {
-    //       headers: {
-    //         'Content-Type': `application/x-www-form-urlencoded`,
-    //       },
-    //     }
-    //   )
-    //   .then(result => {
-    //     console.log('Success:', values);
-    //   })
-    //   .catch(error => {
-    //     setLoginForm({ username: loginForm.username, password: '' });
-    //   });
-  };
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      console.log(token);
+      setToken(token);
+    }
+  }, [setToken]);
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
 
   return (
-    <Card
-      className="login-card"
-      bordered={false}
-      style={{
-        width: '100vw', // 100% ширины экрана
-        height: '100vh', // 100% высоты экрана
-        display: 'flex', // включение Flexbox
-        justifyContent: 'center', // центрирование по горизонтали
-        alignItems: 'center', // центрирование по вертикали
-        flexDirection: 'column', // элементы по вертикали
-      }}
-    >
-      <img
-        src={logo}
-        alt="Logo"
-        style={{ verticalAlign: 'middle', marginBottom: '30px' }}
-      />
-
-      <Form
-        name="basic"
-        initialValues={{ remember: true }}
-        autoComplete="off"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        layout="vertical"
+    <Spin spinning={loading}>
+      <Card
+        className="login-card"
+        bordered={false}
+        style={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
       >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: 'Please input your username!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit" block>
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </Card>
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ verticalAlign: 'middle', marginBottom: '30px' }}
+        />
+        {isTwoFactorRequired ? (
+          <></>
+        ) : (
+          <Form
+            name="basic"
+            initialValues={{ remember: true }}
+            autoComplete="off"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            layout="vertical"
+          >
+            <Form.Item
+              label="Username"
+              name="username"
+              rules={[
+                { required: true, message: 'Please input your username!' },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                { required: true, message: 'Please input your password!' },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        )}
+      </Card>
+    </Spin>
   );
 };
 

@@ -3,10 +3,12 @@ import { Dropdown, Layout, theme } from 'antd';
 import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
-import { Row, Col, Button, Menu,  } from 'antd';
+import { Row, Col, Button, Menu } from 'antd';
 import { SettingOutlined, ReloadOutlined } from '@ant-design/icons';
 import Auth from '../Auth/Auth';
-import './Tray.css'
+import './Tray.css';
+import { listen } from '@tauri-apps/api/event';
+import { useEffect } from 'react';
 const { Header, Content, Footer } = Layout;
 
 const Tray: React.FC = () => {
@@ -14,6 +16,22 @@ const Tray: React.FC = () => {
   const [refreshKey, setRefreshKey] = React.useState(0);
   const [spinning, setSpinning] = React.useState(false);
   const [token, setToken] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    let unlistenFunc: () => void;
+    (async () => {
+      unlistenFunc = await listen('logout', event => {
+        localStorage.removeItem('access_token');
+        setToken(null);
+      });
+    })();
+
+    return () => {
+      if (unlistenFunc) {
+        unlistenFunc();
+      }
+    };
+  }, []);
 
   const {
     token: { colorBgContainer },
@@ -27,8 +45,8 @@ const Tray: React.FC = () => {
     setSpinning(true);
     setRefreshKey((oldKey: number) => oldKey + 1);
     console.log('Refresh button clicked');
-        setTimeout(() => setSpinning(false), 300);
-  }
+    setTimeout(() => setSpinning(false), 300);
+  };
 
   return (
     <Layout
@@ -74,9 +92,9 @@ const Tray: React.FC = () => {
             marginTop: 10,
           }}
         >
-          <Devices refreshKey={refreshKey} token={myToken} />
+          <Devices refreshKey={refreshKey} token={token} />
         </div>
-        <Statistics refreshKey={refreshKey}  token={myToken} />
+        <Statistics refreshKey={refreshKey} token={token} />
       </Content>
     </Layout>
   );

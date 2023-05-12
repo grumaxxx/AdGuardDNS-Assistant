@@ -57,51 +57,49 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
     return new Date().getTime();
   };
 
-  const convertMillisToReadableTime = (millis: number): string => {
-    const date = new Date(millis);
-    return date.toLocaleString();
-  };
-
-  const getStatistics = () => {
+  const getStatistics = async () => {
     const currentTimeMillis = getCurrentTimeMillis();
     const timeFromMillis = currentTimeMillis - 24 * 60 * 60 * 1000;
     const timeToMillis = currentTimeMillis;
-
-    axios
-      .get('https://api.adguard-dns.io/oapi/v1/stats/time', {
-        headers: {
-          Accept: `*/*`,
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          time_from_millis: timeFromMillis,
-          time_to_millis: timeToMillis,
-        },
-      })
-      .then(res => {
-        console.log(res.data.stats);
-        setStat(res.data.stats);
-        const sumBlocked = stat.reduce(
+  
+    try {
+      const result = await axios.get(
+        'https://api.adguard-dns.io/oapi/v1/stats/time',
+        {
+          headers: {
+            Accept: `*/*`,
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            time_from_millis: timeFromMillis,
+            time_to_millis: timeToMillis,
+          },
+        }
+      );
+      if ('stats' in result.data) {
+        const data = result.data.stats as StatsItem[];
+        console.log(data);
+        const sumBlocked = data.reduce(
           (accumulator, currentValue) =>
             accumulator + currentValue.value.blocked,
           0
         );
-        const sumQueries = stat.reduce(
+        const sumQueries = data.reduce(
           (accumulator, currentValue) =>
             accumulator + currentValue.value.queries,
           0
         );
-        console.log(sumBlocked);
-        console.log(sumQueries);
         setDisplayedStat({ total: sumQueries, blocked: sumBlocked });
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        setStat(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
 
   useEffect(() => {
-    // getStatistics();
+    getStatistics();
   }, [refreshKey]);
 
   const handleSegmentChange = () => {

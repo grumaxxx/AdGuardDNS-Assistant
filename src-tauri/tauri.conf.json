@@ -40,17 +40,6 @@
       "iconPath": "icons/icon.png",
       "iconAsTemplate": true,
       "menuOnLeftClick": false
-    },
-    "windows": [
-      {
-        "fullscreen": false,
-        "resizable": true,
-        "label": "main",
-        "title": "adguard-dns-client",
-        "width": 800,
-        "height": 600,
-        "alwaysOnTop": false
-      }
-    ]
+    }
   }
 }
