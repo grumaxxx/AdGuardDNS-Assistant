@@ -1,16 +1,6 @@
 import React from 'react';
-import { List, Switch, Avatar, Row } from 'antd';
-import axios from 'axios';
-import {
-  WindowsOutlined,
-  AndroidOutlined,
-  AppleOutlined,
-  CodeOutlined,
-  DesktopOutlined,
-  FundProjectionScreenOutlined,
-  QuestionOutlined,
-  WifiOutlined,
-} from '@ant-design/icons';
+import { List, Switch, message } from 'antd';
+import { getDevices } from '../Api';
 import { useState, useEffect } from 'react';
 import testDevices from './TestDevices';
 import iosLogo from './icons/ios.svg';
@@ -22,37 +12,8 @@ import consoleLogo from './icons/consoles.svg';
 import routerLogo from './icons/routers.svg';
 import smartTvLogo from './icons/smart_tv.svg';
 import unknownLogo from './icons/unknown.svg';
-
-interface IPAddress {
-  ip_address: string;
-  type: string;
-}
-
-interface DNSAddresses {
-  adguard_dns_over_https_url: string;
-  adguard_dns_over_quic_url: string;
-  adguard_dns_over_tls_url: string;
-  adguard_vpn_dns_over_https_url: string;
-  adguard_vpn_dns_over_quic_url: string;
-  adguard_vpn_dns_over_tls_url: string;
-  dns_over_https_url: string;
-  dns_over_quic_url: string;
-  dns_over_tls_url: string;
-  ip_addresses: IPAddress[];
-}
-
-interface DeviceSettings {
-  protection_enabled: boolean;
-}
-
-interface Device {
-  device_type: string;
-  dns_addresses: DNSAddresses;
-  dns_server_id: string;
-  id: string;
-  name: string;
-  settings: DeviceSettings;
-}
+import { AxiosError } from 'axios';
+import { Device } from '../../types';
 
 const createDeviceIcon = (logo: string) => (
   <img
@@ -87,25 +48,22 @@ interface DevicesProps {
 const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
   const [devices, setDevices] = useState<Device[]>([]);
 
-  const getDevices = () => {
-    axios
-      .get('https://api.adguard-dns.io/oapi/v1/devices', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(res => {
-        console.log(res.data);
-        setDevices(res.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
+  const fetchDevices = async () => {
+    try {
+      const result = await getDevices(token);
+      if (result instanceof Error) {
+        throw result;
+      }
+      console.log("Devices fetched");
+      setDevices(result);
+    } catch (error) {
+      message.error(`Failed to fetch devices: ${(error as AxiosError).message}`);
+    }
+  }
 
   useEffect(() => {
     // setDevices(testDevices);
-    getDevices();
+    fetchDevices();
   }, [refreshKey]);
 
   const handleSwitchChange = (index: number) => {

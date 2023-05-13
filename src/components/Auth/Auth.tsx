@@ -1,63 +1,35 @@
 import { useState, useEffect } from 'react';
 import { Form, Input, Button, Card, Spin, message } from 'antd';
-import axios from 'axios';
 import './Auth.css';
 import logo from './../logo.svg';
 import { AxiosError } from 'axios';
-
-interface LoginForm {
-  username: string;
-  password: string;
-}
-
-interface AccessToken {
-  access_token: string;
-  expires_in: number;
-  refresh_token: string;
-  token_type: string;
-}
-
-interface ServerError {
-  error: string;
-  error_code: string;
-  error_description: string;
-}
+import { AccessToken, TokenServerError } from '../../types';
+import { Authorization } from '../Api';
 
 const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   setToken,
 }) => {
   const [isTwoFactorRequired, setTwoFactorRequired] = useState(false);
-  const [loading, setLoading] = useState(false); // новое состояние
-
+  const [loading, setLoading] = useState(false);
+  
   const onFinish = async (values: { username: string; password: string }) => {
     setLoading(true);
     try {
-      const result = await axios.post(
-        'https://api.adguard-dns.io/oapi/v1/oauth_token',
-        {
-          username: values.username,
-          password: values.password,
-        },
-        {
-          headers: {
-            'Content-Type': `application/x-www-form-urlencoded`,
-          },
-        }
-      );
-
-      if ('access_token' in result.data) {
-        const data = result.data as AccessToken;
+      const result = await Authorization(values.username, values.password)
+      console.log(result);
+      if ('access_token' in result) {
+        const data = result as AccessToken;
         localStorage.setItem('access_token', data.access_token);
-        setToken(data.access_token); // Устанавливаем токен
+        message.success('Success');
+        setToken(data.access_token);
         console.log('Success:', values);
       } else {
-        const errorData = result.data as ServerError;
-        throw errorData;
+        throw result as AxiosError;
       }
     } catch (error) {
       setLoading(false);
       if (error && (error as AxiosError).response) {
-        const serverError = (error as AxiosError).response?.data as ServerError;
+        const serverError = (error as AxiosError).response?.data as TokenServerError;
         message.error(serverError.error_description);
       }
     } finally {

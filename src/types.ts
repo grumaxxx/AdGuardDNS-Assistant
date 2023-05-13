@@ -45,3 +45,47 @@ export interface StatsItem {
   time_millis: number;
   value: StatsValue;
 }
+
+export interface AccessToken {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  token_type: string;
+}
+
+export interface TokenServerError {
+  error: string;
+  error_code: string;
+  error_description: string;
+}
+
+interface IPAddress {
+  ip_address: string;
+  type: string;
+}
+
+interface DNSAddresses {
+  adguard_dns_over_https_url: string;
+  adguard_dns_over_quic_url: string;
+  adguard_dns_over_tls_url: string;
+  adguard_vpn_dns_over_https_url: string;
+  adguard_vpn_dns_over_quic_url: string;
+  adguard_vpn_dns_over_tls_url: string;
+  dns_over_https_url: string;
+  dns_over_quic_url: string;
+  dns_over_tls_url: string;
+  ip_addresses: IPAddress[];
+}
+
+interface DeviceSettings {
+  protection_enabled: boolean;
+}
+
+export interface Device {
+  device_type: string;
+  dns_addresses: DNSAddresses;
+  dns_server_id: string;
+  id: string;
+  name: string;
+  settings: DeviceSettings;
+}

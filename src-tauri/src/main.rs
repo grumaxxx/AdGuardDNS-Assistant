@@ -71,7 +71,6 @@ fn create_tray_window(app: &AppHandle<Wry>) {
     let _ = window.move_window(Position::TrayCenter);
 }
 
-// the payload type must implement `Serialize` and `Clone`.
 #[derive(Clone, serde::Serialize)]
 struct LogOut {
   flag: bool,

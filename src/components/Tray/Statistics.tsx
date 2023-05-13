@@ -43,14 +43,13 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
 
     try {
       const result = await getStatistics(token, timeFromMillis, timeToMillis);
-      
+
       if (result instanceof Error) {
         console.error(result.message);
         message.error(`Error to get data from server: ${result.message}`);
       } else {
-        message.success("Statisctics updated");
+        message.success('Statisctics updated');
         const data = result as StatsItem[];
-        console.log(data);
         const sumBlocked = data.reduce(
           (accumulator, currentValue) =>
             accumulator + currentValue.value.blocked,
@@ -62,7 +61,7 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
           0
         );
         setDisplayedStat({ total: sumQueries, blocked: sumBlocked });
-        console.log("Stats updated");
+        console.log('Stats updated');
       }
     } catch (error) {
       console.error(error);
