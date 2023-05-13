@@ -25,6 +25,26 @@ fn create_settings_window(app: &AppHandle<Wry>) {
     let _ = window.move_window(Position::Center);
 }
 
+fn create_dashboard_window(app: &AppHandle<Wry>) {
+    let window = WindowBuilder::new(app, "dashboard", WindowUrl::External("https://adguard-dns.io/en/dashboard/".parse().unwrap()))
+        .inner_size(1200.0, 700.0)
+        .always_on_top(true)
+        .build()
+        .unwrap();
+    let _ = window.move_window(Position::Center);
+    let _ = window.set_focus();
+}
+
+fn create_query_log_window(app: &AppHandle<Wry>) {
+    let window = WindowBuilder::new(app, "query_log", WindowUrl::App("http://localhost:1420/query_log".into()))
+        .inner_size(600.0, 600.0)
+        .always_on_top(true)
+        .build()
+        .unwrap();
+    let _ = window.move_window(Position::Center);
+    let _ = window.set_focus();
+}
+
 fn create_splash_screen(app: &AppHandle<Wry>) {
     let window = WindowBuilder::new(app, "splash", WindowUrl::App("http://localhost:1420/splash".into()))
         .inner_size(370.0, 580.0)
@@ -40,7 +60,7 @@ fn create_splash_screen(app: &AppHandle<Wry>) {
 
 fn create_tray_window(app: &AppHandle<Wry>) {
     let window = WindowBuilder::new(app, "label", WindowUrl::App("http://localhost:1420/tray".into()))
-        .inner_size(370.0, 580.0)
+        .inner_size(350.0, 560.0)
         .always_on_top(true)
         .hidden_title(true)
         .resizable(false)
@@ -92,6 +112,15 @@ fn main() {
                 match id.as_str() {
                     "settings" => {
                         create_settings_window(app);
+                    },
+                    "query_log" => {
+                        let _ = app.get_window("label").unwrap().hide();
+                        create_query_log_window(app);
+                    },
+                    "dashboard" => {
+                        create_dashboard_window(app);
+                        // TODO: don't create new windows, run from backgroung
+                        let _ = app.get_window("label").unwrap().hide();
                     },
                     "exit" => std::process::exit(0),
                     "logout" => {

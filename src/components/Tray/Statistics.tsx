@@ -1,29 +1,9 @@
 import React from 'react';
-import { Card, Col, Spin, Row, Statistic, Segmented } from 'antd';
+import { Card, Col, Spin, Row, Statistic, Segmented, message } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-interface DeviceStats {
-  device_id: string;
-  last_activity_time_millis: number;
-  value: {
-    blocked: number;
-    companies: number;
-    queries: number;
-  };
-}
-
-interface StatsValue {
-  blocked: number;
-  companies: number;
-  queries: number;
-}
-
-interface StatsItem {
-  time_millis: number;
-  value: StatsValue;
-}
+import { StatsItem } from '../../types';
+import { getStatistics } from '../Api';
 
 interface DisplayedStat {
   total: number;
@@ -47,7 +27,6 @@ interface StatisticsProps {
 
 const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
   const [loading, setLoading] = useState(false);
-  const [stat, setStat] = useState<StatsItem[]>([]);
   const [displayedStat, setDisplayedStat] = useState<DisplayedStat>({
     blocked: 0,
     total: 0,
@@ -57,27 +36,20 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
     return new Date().getTime();
   };
 
-  const getStatistics = async () => {
+  const fetchStatistics = async () => {
     const currentTimeMillis = getCurrentTimeMillis();
     const timeFromMillis = currentTimeMillis - 24 * 60 * 60 * 1000;
     const timeToMillis = currentTimeMillis;
-  
+
     try {
-      const result = await axios.get(
-        'https://api.adguard-dns.io/oapi/v1/stats/time',
-        {
-          headers: {
-            Accept: `*/*`,
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            time_from_millis: timeFromMillis,
-            time_to_millis: timeToMillis,
-          },
-        }
-      );
-      if ('stats' in result.data) {
-        const data = result.data.stats as StatsItem[];
+      const result = await getStatistics(token, timeFromMillis, timeToMillis);
+      
+      if (result instanceof Error) {
+        console.error(result.message);
+        message.error(`Error to get data from server: ${result.message}`);
+      } else {
+        message.success("Statisctics updated");
+        const data = result as StatsItem[];
         console.log(data);
         const sumBlocked = data.reduce(
           (accumulator, currentValue) =>
@@ -90,16 +62,15 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
           0
         );
         setDisplayedStat({ total: sumQueries, blocked: sumBlocked });
-        setStat(data);
+        console.log("Stats updated");
       }
     } catch (error) {
       console.error(error);
     }
   };
-  
 
   useEffect(() => {
-    getStatistics();
+    fetchStatistics();
   }, [refreshKey]);
 
   const handleSegmentChange = () => {
@@ -140,7 +111,10 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
                   title="DNS Queries Total"
                   value={formatNumber(displayedStat.total)}
                   precision={1}
-                  valueStyle={{ color: '#3c81f6' }}
+                  valueStyle={{
+                    color: '#3c81f6',
+                    fontFamily: 'Rubik, sans-serif',
+                  }}
                   prefix={<SwapOutlined />}
                 />
               </Card>
@@ -151,7 +125,10 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
                   title="DNS Queries Blocked"
                   value={formatNumber(displayedStat.blocked)}
                   precision={1}
-                  valueStyle={{ color: '#f04444' }}
+                  valueStyle={{
+                    color: '#f04444',
+                    fontFamily: 'Rubik, sans-serif',
+                  }}
                   prefix={<StopOutlined />}
                 />
               </Card>

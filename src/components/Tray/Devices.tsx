@@ -115,6 +115,31 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
     setDevices(newDevices);
   };
 
+  // const handleSwitchChange = (index: number) => {
+  //   const newDevices = [...devices];
+  //   const device = newDevices[index];
+  //   device.settings.protection_enabled = !device.settings.protection_enabled;
+
+  //   axios
+  //     .put(`https://api.adguard-dns.io/oapi/v1/devices/${device.id}`, device, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     .then(res => {
+  //       console.log(res.data);
+  //       // Обновите состояние устройств только в случае успешного запроса
+  //       setDevices(newDevices);
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //       // Верните переключатель в исходное состояние
+  //       device.settings.protection_enabled = !device.settings.protection_enabled;
+  //       setDevices(newDevices);
+  //       // Показать сообщение об ошибке пользователю
+  //     });
+  // };
+
   return (
     <List
       itemLayout="horizontal"

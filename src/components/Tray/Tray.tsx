@@ -1,9 +1,8 @@
 import React from 'react';
-import { Dropdown, Layout, theme } from 'antd';
 import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
-import { Row, Col, Button, Menu } from 'antd';
+import { Row, Col, Button, Layout, message } from 'antd';
 import { SettingOutlined, ReloadOutlined } from '@ant-design/icons';
 import Auth from '../Auth/Auth';
 import './Tray.css';
@@ -12,7 +11,6 @@ import { useEffect } from 'react';
 const { Header, Content, Footer } = Layout;
 
 const Tray: React.FC = () => {
-  const [loading, setLoading] = React.useState(false);
   const [refreshKey, setRefreshKey] = React.useState(0);
   const [spinning, setSpinning] = React.useState(false);
   const [token, setToken] = React.useState<string | null>(null);
@@ -32,10 +30,6 @@ const Tray: React.FC = () => {
       }
     };
   }, []);
-
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
   if (!token) {
     return <Auth setToken={setToken} />; // Передаем setToken в компонент авторизации
@@ -79,7 +73,7 @@ const Tray: React.FC = () => {
       </Header>
       <Content
         style={{
-          padding: '0px 35px',
+          padding: '0px 25px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
