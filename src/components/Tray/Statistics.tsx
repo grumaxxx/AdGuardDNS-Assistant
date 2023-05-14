@@ -3,6 +3,7 @@ import { Card, Col, Spin, Row, Statistic, Segmented, message } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { useStatistics } from '../../hooks/useStatistics';
+import { SegmentedValue } from 'antd/es/segmented';
 
 function formatNumber(number: number): string {
   if (number >= 1000000) {
@@ -18,12 +19,20 @@ interface StatisticsProps {
   token: string;
 }
 
+const TIME_SEGMENTS = {
+  'Last hour': 60 * 60 * 1000,
+  'Last day': 24 * 60 * 60 * 1000,
+  'Last 7 days': 7 * 24 * 60 * 60 * 1000,
+};
+
 const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
   const [loading, setLoading] = useState(false);
+  const [timeRange, setTimerange] = useState<number>(TIME_SEGMENTS['Last hour']);
 
-  const displayedStat = useStatistics(token, refreshKey);
+  const displayedStat = useStatistics(timeRange, token, refreshKey);
 
-  const handleSegmentChange = () => {
+  const handleSegmentChange = (value: SegmentedValue) => {
+    setTimerange(TIME_SEGMENTS[value as keyof typeof TIME_SEGMENTS]);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -35,7 +44,7 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
       <Segmented
         style={{ marginTop: 10, marginBottom: 10 }}
         block
-        options={['Last hour', 'Last day', 'Last 7 days']}
+        options={Object.keys(TIME_SEGMENTS)}
         onChange={handleSegmentChange}
       />
       <div

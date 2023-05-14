@@ -3,30 +3,25 @@ import { message } from "antd";
 import { StatsItem } from "../types";
 import { useState, useEffect } from "react";
 
-const getCurrentTimeMillis = () => {
-  return new Date().getTime();
-};
-
 interface DisplayedStat {
   total: number;
   blocked: number;
 }
 
-export const useStatistics = (token: string, refreshKey: number) => {
+export const useStatistics = (timeRange: number, token: string, refreshKey: number) => {
   const [displayedStat, setDisplayedStat] = useState<DisplayedStat>({
     blocked: 0,
     total: 0,
   });
 
   useEffect(() => {
-    const currentTimeMillis = getCurrentTimeMillis();
-    const timeFromMillis = currentTimeMillis - 24 * 60 * 60 * 1000;
+    const currentTimeMillis = new Date().getTime();
+    const timeFromMillis = currentTimeMillis - timeRange;
     const timeToMillis = currentTimeMillis;
 
     const fetchStatistics = async () => {
       try {
         const result = await getStatistics(token, timeFromMillis, timeToMillis);
-
         if (result instanceof Error) {
           console.error(result.message);
           message.error(`Error to get data from server: ${result.message}`);
@@ -52,7 +47,7 @@ export const useStatistics = (token: string, refreshKey: number) => {
     };
 
     fetchStatistics();
-  }, [refreshKey, token]);  // добавьте token в список зависимостей, если он используется
+  }, [refreshKey, token, timeRange]);  // добавьте token в список зависимостей, если он используется
 
   return displayedStat;
 };
