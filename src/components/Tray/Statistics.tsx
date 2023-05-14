@@ -2,13 +2,7 @@ import React from 'react';
 import { Card, Col, Spin, Row, Statistic, Segmented, message } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import { StatsItem } from '../../types';
-import { getStatistics } from '../Api';
-
-interface DisplayedStat {
-  total: number;
-  blocked: number;
-}
+import { useStatistics } from '../../hooks/useStatistics';
 
 function formatNumber(number: number): string {
   if (number >= 1000000) {
@@ -19,7 +13,6 @@ function formatNumber(number: number): string {
     return number.toString();
   }
 }
-
 interface StatisticsProps {
   refreshKey: number;
   token: string;
@@ -27,50 +20,8 @@ interface StatisticsProps {
 
 const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
   const [loading, setLoading] = useState(false);
-  const [displayedStat, setDisplayedStat] = useState<DisplayedStat>({
-    blocked: 0,
-    total: 0,
-  });
 
-  const getCurrentTimeMillis = () => {
-    return new Date().getTime();
-  };
-
-  const fetchStatistics = async () => {
-    const currentTimeMillis = getCurrentTimeMillis();
-    const timeFromMillis = currentTimeMillis - 24 * 60 * 60 * 1000;
-    const timeToMillis = currentTimeMillis;
-
-    try {
-      const result = await getStatistics(token, timeFromMillis, timeToMillis);
-
-      if (result instanceof Error) {
-        console.error(result.message);
-        message.error(`Error to get data from server: ${result.message}`);
-      } else {
-        message.success('Statisctics updated');
-        const data = result as StatsItem[];
-        const sumBlocked = data.reduce(
-          (accumulator, currentValue) =>
-            accumulator + currentValue.value.blocked,
-          0
-        );
-        const sumQueries = data.reduce(
-          (accumulator, currentValue) =>
-            accumulator + currentValue.value.queries,
-          0
-        );
-        setDisplayedStat({ total: sumQueries, blocked: sumBlocked });
-        console.log('Stats updated');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchStatistics();
-  }, [refreshKey]);
+  const displayedStat = useStatistics(token, refreshKey);
 
   const handleSegmentChange = () => {
     setLoading(true);

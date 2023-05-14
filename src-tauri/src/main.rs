@@ -18,7 +18,7 @@ fn system_tray_menu() -> SystemTrayMenu {
 }
 
 fn create_settings_window(app: &AppHandle<Wry>) {
-    let window = WindowBuilder::new(app, "setting", WindowUrl::External("https://example.com/".parse().unwrap()))
+    let window = WindowBuilder::new(app, "setting", WindowUrl::External("index.html/type=settings".parse().unwrap()))
         .inner_size(800.0, 500.0)
         .build()
         .unwrap();
@@ -29,6 +29,7 @@ fn create_dashboard_window(app: &AppHandle<Wry>) {
     let window = WindowBuilder::new(app, "dashboard", WindowUrl::External("https://adguard-dns.io/en/dashboard/".parse().unwrap()))
         .inner_size(1200.0, 700.0)
         .always_on_top(true)
+        .title("AdGuard DNS Dashboard")
         .build()
         .unwrap();
     let _ = window.move_window(Position::Center);
@@ -36,9 +37,10 @@ fn create_dashboard_window(app: &AppHandle<Wry>) {
 }
 
 fn create_query_log_window(app: &AppHandle<Wry>) {
-    let window = WindowBuilder::new(app, "query_log", WindowUrl::App("http://localhost:1420/query_log".into()))
+    let window = WindowBuilder::new(app, "query_log", WindowUrl::App("index.html/?type=query_log".into()))
         .inner_size(600.0, 600.0)
         .always_on_top(true)
+        .title("AdGuard DNS Query Log")
         .build()
         .unwrap();
     let _ = window.move_window(Position::Center);
@@ -46,7 +48,7 @@ fn create_query_log_window(app: &AppHandle<Wry>) {
 }
 
 fn create_splash_screen(app: &AppHandle<Wry>) {
-    let window = WindowBuilder::new(app, "splash", WindowUrl::App("http://localhost:1420/splash".into()))
+    let window = WindowBuilder::new(app, "splash", WindowUrl::App("index.html".into()))
         .inner_size(370.0, 580.0)
         .always_on_top(true)
         .resizable(false)
@@ -58,7 +60,7 @@ fn create_splash_screen(app: &AppHandle<Wry>) {
 }
 
 fn create_tray_window(app: &AppHandle<Wry>) {
-    let window = WindowBuilder::new(app, "label", WindowUrl::App("http://localhost:1420/tray".into()))
+    let window = WindowBuilder::new(app, "label", WindowUrl::App("index.html?type=tray".into()))
         .inner_size(350.0, 560.0)
         .always_on_top(true)
         .resizable(false)
@@ -88,6 +90,8 @@ fn main() {
             SystemTrayEvent::LeftClick { .. } => {
                 on_tray_event(app, &event);
                 match app.get_window("label") {
+                    // TODO: if windows doens't exist, first time create splash screen,
+                    // and turn it off in react, when data is ready
                     None => create_tray_window(app),
                     Some(label) => {
                         match label.is_visible().unwrap() {

@@ -34,59 +34,64 @@ const QueryLog: React.FC = () => {
   useEffect(() => {
     fetchItems();
   }, [token]);
-  
+
   const fetchMoreData = () => {
     if (!hasMore) return;
     fetchItems();
   };
 
-  return (
-    token ? (
-      <div
-        id="scrollableDiv"
-        style={{
-          overflow: 'auto',
-          height: '100vh',
-          width: '100vw',
-          marginLeft: '20px',
-        }}
+  return token ? (
+    <div
+      id="scrollableDiv"
+      style={{
+        overflow: 'auto',
+        height: '100vh',
+        width: '100vw',
+        marginLeft: '20px',
+      }}
+    >
+      <InfiniteScroll
+        dataLength={items.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: 'center' }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+        scrollableTarget="scrollableDiv"
       >
-        <InfiniteScroll
-          dataLength={items.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-          endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
-          scrollableTarget="scrollableDiv"
+        <List
+          dataSource={items}
+          renderItem={item => (
+            <List.Item key={item.asn}>
+              <List.Item.Meta
+                title={`Domain: ${item.domain} Company: ${item.company_id}`}
+                description={`Time: ${item.time_iso}`}
+              />
+            </List.Item>
+          )}
         >
-          <List
-            dataSource={items}
-            renderItem={item => (
-              <List.Item key={item.asn}>
-                <List.Item.Meta
-                  title={`Domain: ${item.domain} Company: ${item.company_id}`}
-                  description={`Time: ${item.time_iso}`}
-                />
-              </List.Item>
-            )}
-          >
-            {hasMore && (
-              <div style={{ textAlign: 'center' }}>
-                <Spin />
-              </div>
-            )}
-          </List>
-        </InfiniteScroll>
-      </div>
-    ) : (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <h1>Please Log In</h1>
-      </div>
-    )
+          {hasMore && (
+            <div style={{ textAlign: 'center' }}>
+              <Spin />
+            </div>
+          )}
+        </List>
+      </InfiniteScroll>
+    </div>
+  ) : (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <h1>Please Log In</h1>
+    </div>
   );
 };
 

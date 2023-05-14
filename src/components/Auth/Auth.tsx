@@ -2,48 +2,22 @@ import { useState, useEffect } from 'react';
 import { Form, Input, Button, Card, Spin, message } from 'antd';
 import './Auth.css';
 import logo from './../logo.svg';
-import { AxiosError } from 'axios';
-import { AccessToken, TokenServerError } from '../../types';
-import { Authorization } from '../Api';
+import { useAuthorization } from '../../hooks/UseAuth';
+import { useStoredToken } from '../../hooks/useStoredToken';
 
 const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   setToken,
 }) => {
   const [isTwoFactorRequired, setTwoFactorRequired] = useState(false);
-  const [loading, setLoading] = useState(false);
-  
-  const onFinish = async (values: { username: string; password: string }) => {
-    setLoading(true);
-    try {
-      const result = await Authorization(values.username, values.password)
-      console.log(result);
-      if ('access_token' in result) {
-        const data = result as AccessToken;
-        localStorage.setItem('access_token', data.access_token);
-        message.success('Success');
-        setToken(data.access_token);
-        console.log('Success:', values);
-      } else {
-        throw result as AxiosError;
-      }
-    } catch (error) {
-      setLoading(false);
-      if (error && (error as AxiosError).response) {
-        const serverError = (error as AxiosError).response?.data as TokenServerError;
-        message.error(serverError.error_description);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { authorize, loading } = useAuthorization();
+  useStoredToken(setToken);
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
+  const onFinish = async (values: { username: string; password: string }) => {
+    const token = await authorize(values.username, values.password);
     if (token) {
-      console.log(token);
       setToken(token);
     }
-  }, [setToken]);
+  };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);

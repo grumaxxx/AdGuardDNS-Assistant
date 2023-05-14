@@ -3,12 +3,12 @@ import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
 import { Row, Col, Button, Layout, message } from 'antd';
-import { SettingOutlined, ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons';
 import Auth from '../Auth/Auth';
 import './Tray.css';
 import { listen } from '@tauri-apps/api/event';
 import { useEffect } from 'react';
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 
 const Tray: React.FC = () => {
   const [refreshKey, setRefreshKey] = React.useState(0);
@@ -32,7 +32,7 @@ const Tray: React.FC = () => {
   }, []);
 
   if (!token) {
-    return <Auth setToken={setToken} />; // Передаем setToken в компонент авторизации
+    return <Auth setToken={setToken} />;
   }
 
   const handleClick = () => {
