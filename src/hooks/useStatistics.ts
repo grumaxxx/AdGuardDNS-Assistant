@@ -47,7 +47,7 @@ export const useStatistics = (timeRange: number, token: string, refreshKey: numb
     };
 
     fetchStatistics();
-  }, [refreshKey, token, timeRange]);  // добавьте token в список зависимостей, если он используется
+  }, [refreshKey, token, timeRange]);
 
   return displayedStat;
 };
