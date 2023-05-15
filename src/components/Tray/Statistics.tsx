@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col, Spin, Row, Statistic, Segmented, message } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useStatistics } from '../../hooks/useStatistics';
 import { SegmentedValue } from 'antd/es/segmented';
 

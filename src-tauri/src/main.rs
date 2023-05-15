@@ -1,6 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-use tauri::{CustomMenuItem, SystemTrayMenuItem, Manager, SystemTray, SystemTrayEvent, WindowBuilder, WindowUrl, SystemTrayMenu, Wry, AppHandle, LogicalSize, Size};
+use tauri::{CustomMenuItem, SystemTrayMenuItem, Manager, SystemTray, SystemTrayEvent, WindowBuilder, WindowUrl, SystemTrayMenu, Wry, AppHandle, App, Size};
 use tauri_plugin_positioner::{Position, WindowExt, on_tray_event};
 
 fn system_tray_menu() -> SystemTrayMenu {
@@ -48,19 +48,7 @@ fn create_query_log_window(app: &AppHandle<Wry>) {
 }
 
 fn create_splash_screen(app: &AppHandle<Wry>) {
-    let window = WindowBuilder::new(app, "splash", WindowUrl::App("index.html".into()))
-        .inner_size(370.0, 580.0)
-        .always_on_top(true)
-        .resizable(false)
-        .decorations(false)
-        .build()
-        .unwrap();
-    let _ = window.show();
-    let _ = window.move_window(Position::TrayCenter);
-}
-
-fn create_tray_window(app: &AppHandle<Wry>) {
-    let window = WindowBuilder::new(app, "label", WindowUrl::App("index.html?type=tray".into()))
+    let window = WindowBuilder::new(app, "splashscreen", WindowUrl::App("index.html?type=splash_screen".into()))
         .inner_size(350.0, 560.0)
         .always_on_top(true)
         .resizable(false)
@@ -71,15 +59,37 @@ fn create_tray_window(app: &AppHandle<Wry>) {
     let _ = window.move_window(Position::TrayCenter);
 }
 
+fn create_tray_window(app: &AppHandle<Wry>) {
+    let window = WindowBuilder::new(app, "tray", WindowUrl::App("index.html?type=tray".into()))
+        .inner_size(350.0, 560.0)
+        .always_on_top(true)
+        .resizable(false)
+        .decorations(false)
+        .build()
+        .unwrap();
+    let _ = window.show();
+    let _ = window.open_devtools();
+    let _ = window.move_window(Position::TrayCenter);
+}
+
 #[derive(Clone, serde::Serialize)]
 struct LogOut {
   flag: bool,
 }
 
+#[tauri::command]
+async fn close_splashscreen(window: tauri::Window) {
+  println!("Close splashscreen");
+  if let Some(splashscreen) = window.get_window("splashscreen") {
+    splashscreen.close().unwrap();
+  }
+  window.get_window("tray").unwrap().show().unwrap();
+}
+
 fn main() {
     println!("Start TAURI app");
     let system_tray = SystemTray::new().with_menu(system_tray_menu());
-    tauri::Builder::default()
+    let mut app = tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
         .setup(|app| {
             Ok(())
@@ -89,10 +99,13 @@ fn main() {
             match event {
             SystemTrayEvent::LeftClick { .. } => {
                 on_tray_event(app, &event);
-                match app.get_window("label") {
+                match app.get_window("tray") {
                     // TODO: if windows doens't exist, first time create splash screen,
                     // and turn it off in react, when data is ready
-                    None => create_tray_window(app),
+                    None => {
+                        create_tray_window(app);
+                        // create_splash_screen(app);
+                    },
                     Some(label) => {
                         match label.is_visible().unwrap() {
                             true => {
@@ -115,13 +128,13 @@ fn main() {
                         create_settings_window(app);
                     },
                     "query_log" => {
-                        let _ = app.get_window("label").unwrap().hide();
+                        let _ = app.get_window("tray").unwrap().hide();
                         create_query_log_window(app);
                     },
                     "dashboard" => {
                         create_dashboard_window(app);
                         // TODO: don't create new windows, run from backgroung
-                        let _ = app.get_window("label").unwrap().hide();
+                        let _ = app.get_window("tray").unwrap().hide();
                     },
                     "exit" => std::process::exit(0),
                     "logout" => {
@@ -135,6 +148,9 @@ fn main() {
         )
         .invoke_handler(tauri::generate_handler![
         ])
-        .run(tauri::generate_context!())
+        .build(tauri::generate_context!())
         .expect("error while running tauri application");
+    #[cfg(target_os = "macos")]
+    app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+    app.run(|_app_handle, _event| {});
 }

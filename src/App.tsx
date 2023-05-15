@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import './index.css';
 import Tray from './components/Tray/Tray';
 import QueryLog from './components/QueryLog/QueryLog';
+import SplashScreen from './components/Splashscreen/Splashscreen';
 
 const App = () => {
   const location = useLocation();
@@ -14,6 +15,8 @@ const App = () => {
       navigate('/tray');
     } else if (location.search === '?type=query_log') {
       navigate('/query_log');
+    } else if (location.search === '?type=splash_screen') {
+      navigate('/splash_screen');
     }
   }, [location.search, navigate]);
 
@@ -29,6 +32,7 @@ const App = () => {
       <Routes>
         <Route path="/tray" element={<Tray />} />
         <Route path="/query_log" element={<QueryLog />} />
+        <Route path="/splash_screen" element={<SplashScreen />} />
       </Routes>
     </ConfigProvider>
   );
