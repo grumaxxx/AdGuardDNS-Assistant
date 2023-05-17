@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Col, Spin, Row, Statistic, Segmented, message } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useStatistics } from '../../hooks/useStatistics';
 import { SegmentedValue } from 'antd/es/segmented';
 
-function formatNumber(number: number): string {
-  if (number >= 1000000) {
-    return `${(number / 1000000).toFixed(1)}M`;
-  } else if (number >= 1000) {
-    return `${(number / 1000).toFixed(1)}K`;
+function formatNumber(num: number): string {
+  if (num < 1000) {
+    return num.toFixed(0);
+  } else if (num < 100000) {
+    return (num / 1000).toFixed(1) + 'K';
+  } else if (num < 1000000) {
+    return Math.round(num / 1000) + 'K';
   } else {
-    return number.toString();
+    return (num / 1000000).toFixed(1) + 'M';
   }
 }
+
 interface StatisticsProps {
   refreshKey: number;
   token: string;
@@ -26,17 +29,11 @@ const TIME_SEGMENTS = {
 };
 
 const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
-  const [loading, setLoading] = useState(false);
   const [timeRange, setTimerange] = useState<number>(TIME_SEGMENTS['Last hour']);
-
-  const displayedStat = useStatistics(timeRange, token, refreshKey);
+  const {displayedStat, loading} = useStatistics(timeRange, token, refreshKey);
 
   const handleSegmentChange = (value: SegmentedValue) => {
     setTimerange(TIME_SEGMENTS[value as keyof typeof TIME_SEGMENTS]);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
   };
 
   return (
@@ -57,7 +54,7 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              height: '100%',
+              height: '140px',
             }}
           >
             <Spin />
@@ -69,7 +66,6 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
                 <Statistic
                   title="DNS Queries Total"
                   value={formatNumber(displayedStat.total)}
-                  precision={1}
                   valueStyle={{
                     color: '#3c81f6',
                     fontFamily: 'Rubik, sans-serif',
@@ -83,7 +79,6 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
                 <Statistic
                   title="DNS Queries Blocked"
                   value={formatNumber(displayedStat.blocked)}
-                  precision={1}
                   valueStyle={{
                     color: '#f04444',
                     fontFamily: 'Rubik, sans-serif',

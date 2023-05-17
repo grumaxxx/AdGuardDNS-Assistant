@@ -13,8 +13,10 @@ export const useStatistics = (timeRange: number, token: string, refreshKey: numb
     blocked: 0,
     total: 0,
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const currentTimeMillis = new Date().getTime();
     const timeFromMillis = currentTimeMillis - timeRange;
     const timeToMillis = currentTimeMillis;
@@ -26,7 +28,11 @@ export const useStatistics = (timeRange: number, token: string, refreshKey: numb
           console.error(result.message);
           message.error(`Error to get data from server: ${result.message}`);
         } else {
-          message.success('Statisctics updated');
+          message.open({
+            type: 'success',
+            content: 'Statisctics updated',
+            duration: 1,
+          });
           const data = result as StatsItem[];
           const sumBlocked = data.reduce(
             (accumulator, currentValue) =>
@@ -43,11 +49,13 @@ export const useStatistics = (timeRange: number, token: string, refreshKey: numb
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchStatistics();
   }, [refreshKey, token, timeRange]);
 
-  return displayedStat;
+  return {displayedStat, loading};
 };
