@@ -3,7 +3,6 @@ import { Form, Input, Button, Card, Spin, message } from 'antd';
 import './Auth.css';
 import logo from './../logo.svg';
 import { useAuthorization } from '../../hooks/UseAuth';
-import { useStoredToken } from '../../hooks/useStoredToken';
 import { TwoFactorForm } from './TwoFactorForm';
 import { AuthForm } from './AuthForm';
 

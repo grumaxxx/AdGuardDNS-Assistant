@@ -83,13 +83,13 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
               {device.name}
             </div>
           </div>
-          <div>
+          <span onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
             <Switch
               checked={device.settings.protection_enabled}
               onChange={() => handleSwitchChange(device)}
               style={{ marginRight: 10 }}
             />
-          </div>
+          </span>
         </List.Item>
       )}
     />
