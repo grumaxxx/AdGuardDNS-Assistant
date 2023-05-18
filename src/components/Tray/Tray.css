@@ -6,3 +6,8 @@
 .spinning {
   animation: spin 0.3s linear;
 }
+
+.selected {
+  background-color: #d8e6fd;
+  border-radius: 12px;
+}

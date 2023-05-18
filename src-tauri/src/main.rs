@@ -78,6 +78,22 @@ struct LogOut {
 }
 
 #[tauri::command]
+async fn is_tary_window_active(app: tauri::AppHandle) -> bool {
+    match app.get_window("tray") {
+        None => {
+            println!("Tray windows hasn't been started");
+            return false;
+        },
+        Some(label) => {
+            match label.is_visible().unwrap() {
+                true => {return true;},
+                false => {return false;}
+            }
+        }
+    };
+}
+
+#[tauri::command]
 async fn close_splashscreen(window: tauri::Window) {
   println!("Close splashscreen");
   if let Some(splashscreen) = window.get_window("splashscreen") {
@@ -147,6 +163,7 @@ fn main() {
         }
         )
         .invoke_handler(tauri::generate_handler![
+            is_tary_window_active
         ])
         .build(tauri::generate_context!())
         .expect("error while running tauri application");

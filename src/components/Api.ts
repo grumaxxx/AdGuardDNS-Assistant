@@ -1,13 +1,33 @@
 import axios from "axios"
 import { QueryLogServerResponse, StatsItem, AccessToken, Device } from "../types";
 
-export const Authorization = async (username: string, password: string): Promise<AccessToken | Error> => {
+export const Authorization = async (username: string, password: string, mfa_token: string | null): Promise<AccessToken | Error> => {
   try {
     const result = await axios.post(
       'https://api.adguard-dns.io/oapi/v1/oauth_token',
       {
+        mfa_token: mfa_token,
         username: username,
         password: password,
+      },
+      {
+        headers: {
+          'Content-Type': `application/x-www-form-urlencoded`,
+        },
+      }
+    );
+    return result.data as AccessToken; 
+  } catch (error) {
+    return error instanceof Error ? error : new Error("An unknown error occurred.");
+  }
+}
+
+export const RefreshToken = async (refresh_token: string): Promise<AccessToken | Error> => {
+  try {
+    const result = await axios.post(
+      'https://api.adguard-dns.io/oapi/v1/oauth_token',
+      {
+        refresh_token: refresh_token,
       },
       {
         headers: {

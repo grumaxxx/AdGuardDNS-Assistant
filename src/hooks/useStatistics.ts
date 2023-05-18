@@ -2,6 +2,7 @@ import { getStatistics } from "../components/Api";
 import { message } from "antd";
 import { StatsItem } from "../types";
 import { useState, useEffect } from "react";
+import { invoke } from '@tauri-apps/api/tauri'
 
 interface DisplayedStat {
   total: number;
@@ -28,11 +29,17 @@ export const useStatistics = (timeRange: number, token: string, refreshKey: numb
           console.error(result.message);
           message.error(`Error to get data from server: ${result.message}`);
         } else {
-          message.open({
-            type: 'success',
-            content: 'Statisctics updated',
-            duration: 1,
-          });
+          invoke('is_tary_window_active').then(
+            (is_active) => {
+              if (is_active) {
+                message.open({
+                  type: 'success',
+                  content: 'Statisctics updated',
+                  duration: 2,
+                });
+              }
+            }
+          )
           const data = result as StatsItem[];
           const sumBlocked = data.reduce(
             (accumulator, currentValue) =>

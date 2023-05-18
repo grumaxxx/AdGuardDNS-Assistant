@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "adguard-dns-client",
+    "productName": "AdGuard DNS Assistant",
     "version": "0.0.0"
   },
   "tauri": {
@@ -27,7 +27,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.adguard-dns-client",
+      "identifier": "com.tauri.adguard-dns-assistant",
       "targets": "all"
     },
     "security": {

@@ -29,8 +29,14 @@ const TIME_SEGMENTS = {
 };
 
 const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
-  const [timeRange, setTimerange] = useState<number>(TIME_SEGMENTS['Last hour']);
-  const {displayedStat, loading} = useStatistics(timeRange, token, refreshKey);
+  const [timeRange, setTimerange] = useState<number>(
+    TIME_SEGMENTS['Last hour']
+  );
+  const { displayedStat, loading } = useStatistics(
+    timeRange,
+    token,
+    refreshKey
+  );
 
   const handleSegmentChange = (value: SegmentedValue) => {
     setTimerange(TIME_SEGMENTS[value as keyof typeof TIME_SEGMENTS]);
@@ -57,7 +63,7 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
               height: '140px',
             }}
           >
-            <Spin tip="Loading" size="large"/>
+            <Spin tip="Loading" size="large" />
           </div>
         ) : (
           <Row gutter={10}>

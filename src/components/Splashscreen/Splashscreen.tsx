@@ -9,7 +9,7 @@ const SplashScreen: React.FC = () => {
 
   return (
     <div className="splash-screen">
-      <img src={Logo} alt="Logo" className="splash-logo" /> 
+      <img src={Logo} alt="Logo" className="splash-logo" />
       <Spin indicator={antIcon} className="splash-spinner" />
     </div>
   );

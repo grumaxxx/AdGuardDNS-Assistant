@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
@@ -7,21 +7,26 @@ import { ReloadOutlined } from '@ant-design/icons';
 import Auth from '../Auth/Auth';
 import './Tray.css';
 import { listen } from '@tauri-apps/api/event';
-import { useEffect } from 'react';
 const { Header, Content } = Layout;
 
 const Tray: React.FC = () => {
   const [refreshKey, setRefreshKey] = React.useState(0);
   const [spinning, setSpinning] = React.useState(false);
   const [token, setToken] = React.useState<string | null>(null);
+  const updateInterval = 5 * 60 * 1000;
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     let unlistenFunc: () => void;
     (async () => {
-      unlistenFunc = await listen('logout', event => {
-        localStorage.removeItem('access_token');
-        setToken(null);
-      });
+      try {
+        unlistenFunc = await listen('logout', event => {
+          localStorage.removeItem('access_token');
+          setToken(null);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     })();
 
     return () => {
@@ -31,15 +36,35 @@ const Tray: React.FC = () => {
     };
   }, []);
 
+  const intervalEffect = () => {
+    intervalId.current = setInterval(() => {
+      console.log(`Statistics was autoupdated`);
+      setRefreshKey((oldKey: number) => oldKey + 1);
+    }, updateInterval);
+    return () => {
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
+    };
+  };
+
+  useEffect(intervalEffect, [token]);
+
   if (!token) {
     return <Auth setToken={setToken} />;
   }
 
   const handleClick = () => {
     setSpinning(true);
+    if (intervalId.current) {
+      clearInterval(intervalId.current);
+    }
     setRefreshKey((oldKey: number) => oldKey + 1);
     console.log('Refresh button clicked');
     setTimeout(() => setSpinning(false), 300);
+    intervalId.current = setInterval(() => {
+      setRefreshKey((oldKey: number) => oldKey + 1);
+    }, updateInterval);
   };
 
   return (
