@@ -57,7 +57,7 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token }) => {
               height: '140px',
             }}
           >
-            <Spin />
+            <Spin tip="Loading" size="large"/>
           </div>
         ) : (
           <Row gutter={10}>

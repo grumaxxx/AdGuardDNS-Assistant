@@ -84,3 +84,35 @@ export const getDevices = async (token: string): Promise<Device[] | Error> => {
     return error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
+
+export const turnOffDevice = async (deviceID: string, token: string) => {
+  try {
+    const response = await axios.put(`https://api.adguard-dns.io/oapi/v1/devices/${deviceID}/settings`, 
+    {
+      protection_enabled: false
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  } catch (error) {
+    return error instanceof Error ? error : new Error("An unknown error occurred.");
+  }
+}
+
+export const turnOnDevice = async (deviceID: string, token: string) => {
+  try {
+    const response = await axios.put(`https://api.adguard-dns.io/oapi/v1/devices/${deviceID}/settings`, 
+    {
+      protection_enabled: true
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  } catch (error) {
+    return error instanceof Error ? error : new Error("An unknown error occurred.");
+  }
+}

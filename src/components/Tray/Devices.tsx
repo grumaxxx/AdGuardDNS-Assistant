@@ -1,78 +1,43 @@
 import React from 'react';
-import { List, Switch } from 'antd';
+import { List, Switch, message } from 'antd';
 import { Device } from '../../types';
 import { useDevices } from '../../hooks/useDevices';
-import iosLogo from './icons/ios.svg';
-import androidLogo from './icons/android.svg';
-import winLogo from './icons/windows.svg';
-import macLogo from './icons/macos.svg';
-import linuxLogo from './icons/linux.svg';
-import consoleLogo from './icons/consoles.svg';
-import routerLogo from './icons/routers.svg';
-import smartTvLogo from './icons/smart_tv.svg';
-import unknownLogo from './icons/unknown.svg';
-
-const createDeviceIcon = (logo: string) => (
-  <img
-    src={logo}
-    alt="Logo"
-    style={{
-      verticalAlign: 'middle',
-      alignItems: 'center',
-      width: '24px',
-      height: '24px',
-    }}
-  />
-);
-
-const deviceIcons = {
-  WINDOWS: createDeviceIcon(winLogo),
-  ANDROID: createDeviceIcon(androidLogo),
-  MAC: createDeviceIcon(macLogo),
-  IOS: createDeviceIcon(iosLogo),
-  LINUX: createDeviceIcon(linuxLogo),
-  ROUTER: createDeviceIcon(routerLogo),
-  SMART_TV: createDeviceIcon(smartTvLogo),
-  GAME_CONSOLE: createDeviceIcon(consoleLogo),
-  UNKNOWN: createDeviceIcon(unknownLogo),
-};
-
+import { deviceIcons } from './DeviceIcons';
+import { turnOffDevice, turnOnDevice } from '../Api';
 interface DevicesProps {
   refreshKey: number;
   token: string;
 }
-// const handleSwitchChange = (index: number) => {
-//   const newDevices = [...devices];
-//   const device = newDevices[index];
-//   device.settings.protection_enabled = !device.settings.protection_enabled;
-
-//   axios
-//     .put(`https://api.adguard-dns.io/oapi/v1/devices/${device.id}`, device, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     })
-//     .then(res => {
-//       console.log(res.data);
-//       setDevices(newDevices);
-//     })
-//     .catch(error => {
-//       console.error(error);
-//       device.settings.protection_enabled = !device.settings.protection_enabled;
-//       setDevices(newDevices);
-//     });
-// };
 
 const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
 const {devices, setDevices}  = useDevices(token, refreshKey);
 
-  const handleSwitchChange = (index: number) => {
-    const newDevices = [...devices];
-    newDevices[index].settings.protection_enabled =
-      !newDevices[index].settings.protection_enabled;
-    setDevices(newDevices);
-  };
-
+const handleSwitchChange = (device: Device) => {
+  console.log(`Try to change device protection: ${device.id}, current state: ${device.settings.protection_enabled}`)
+  if(device.settings.protection_enabled){
+    try {
+      turnOffDevice(device.id, token)
+      const newDevices = [...devices];
+      const deviceIndex = devices.findIndex(d => d.id === device.id);
+      newDevices[deviceIndex].settings.protection_enabled = false;
+      setDevices(newDevices);
+      message.warning(`${device.name} protection is DISABLED`)
+    } catch (error) {
+      message.error("Failed to turn off device");
+    }
+  } else {
+    try {
+      turnOnDevice(device.id, token)
+      const newDevices = [...devices];
+      const deviceIndex = devices.findIndex(d => d.id === device.id);
+      newDevices[deviceIndex].settings.protection_enabled = true;
+      setDevices(newDevices);
+      message.success(`${device.name} protection is ENABLED`)
+    } catch (error) {
+      message.error("Failed to turn on device");
+    }
+  }
+};
 
   return (
     <List
@@ -95,7 +60,7 @@ const {devices, setDevices}  = useDevices(token, refreshKey);
           <div>
             <Switch
               checked={device.settings.protection_enabled}
-              onChange={() => handleSwitchChange(index)}
+              onChange={() => handleSwitchChange(device)}
             />
           </div>
         </List.Item>
