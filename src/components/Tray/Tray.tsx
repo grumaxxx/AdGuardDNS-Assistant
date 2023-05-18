@@ -8,6 +8,7 @@ import Auth from '../Auth/Auth';
 import './Tray.css';
 import { listen } from '@tauri-apps/api/event';
 const { Header, Content } = Layout;
+import useStoredToken from '../../hooks/useStoredToken';
 
 const Tray: React.FC = () => {
   const [refreshKey, setRefreshKey] = React.useState(0);
@@ -15,6 +16,8 @@ const Tray: React.FC = () => {
   const [token, setToken] = React.useState<string | null>(null);
   const updateInterval = 5 * 60 * 1000;
   const intervalId = useRef<NodeJS.Timeout | null>(null);
+
+  useStoredToken(setToken);
 
   useEffect(() => {
     let unlistenFunc: () => void;

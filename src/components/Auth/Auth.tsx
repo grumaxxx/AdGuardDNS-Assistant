@@ -14,10 +14,13 @@ const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   const { authorize, loading } = useAuthorization();
   const [form] = Form.useForm();
 
-  useStoredToken(setToken);
-
   const onFinish = async (values: { username: string; password: string }) => {
-    const token = await authorize(values.username, values.password, null, setTwoFactorRequired);
+    const token = await authorize(
+      values.username,
+      values.password,
+      null,
+      setTwoFactorRequired
+    );
     if (token) {
       setToken(token);
     }
@@ -28,8 +31,16 @@ const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   };
 
   const handleFormFinish = async (values: { token: string }) => {
-    const { username, password } = form.getFieldsValue(['username', 'password']);
-    const token = await authorize(username, password, values.token, setTwoFactorRequired);
+    const { username, password } = form.getFieldsValue([
+      'username',
+      'password',
+    ]);
+    const token = await authorize(
+      username,
+      password,
+      values.token,
+      setTwoFactorRequired
+    );
     if (token) {
       setToken(token);
     }
@@ -59,9 +70,16 @@ const Auth: React.FC<{ setToken: (token: string) => void }> = ({
           style={{ verticalAlign: 'middle', marginBottom: '30px' }}
         />
         {isTwoFactorRequired ? (
-          <TwoFactorForm onFinish={handleFormFinish} onFinishFailed={handleFormFinishFailed} />
+          <TwoFactorForm
+            onFinish={handleFormFinish}
+            onFinishFailed={handleFormFinishFailed}
+          />
         ) : (
-          <AuthForm onFinish={onFinish} onFinishFailed={onFinishFailed} form={form}/>
+          <AuthForm
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            form={form}
+          />
         )}
       </Card>
     </Spin>

@@ -15,7 +15,13 @@ export const useAuthorization = () => {
         const data = result as AccessToken;
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
-        localStorage.setItem('token_expire_in', data.expires_in.toString());
+
+        const expiresIn = data.expires_in;
+        const currentTime = Math.floor(Date.now() / 1000);
+        const expireAt = currentTime + expiresIn;
+
+        localStorage.setItem('token_expires_at', expireAt.toString());
+        
         message.success('Success');
         setLoading(false);
         return data.access_token;
