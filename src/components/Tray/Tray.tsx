@@ -9,6 +9,7 @@ import './Tray.css';
 import { listen } from '@tauri-apps/api/event';
 const { Header, Content } = Layout;
 import useStoredToken from '../../hooks/useStoredToken';
+import { invoke } from '@tauri-apps/api';
 
 const Tray: React.FC = () => {
   const [refreshKey, setRefreshKey] = React.useState(0);
@@ -18,6 +19,14 @@ const Tray: React.FC = () => {
   const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   useStoredToken(setToken);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      invoke('close_splashscreen')
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     let unlistenFunc: () => void;

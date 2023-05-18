@@ -68,7 +68,7 @@ fn create_tray_window(app: &AppHandle<Wry>) {
         .build()
         .unwrap();
     let _ = window.show();
-    let _ = window.open_devtools();
+    // let _ = window.open_devtools();
     let _ = window.move_window(Position::TrayCenter);
 }
 
@@ -120,7 +120,7 @@ fn main() {
                     // and turn it off in react, when data is ready
                     None => {
                         create_tray_window(app);
-                        // create_splash_screen(app);
+                        create_splash_screen(app);
                     },
                     Some(label) => {
                         match label.is_visible().unwrap() {
@@ -163,7 +163,8 @@ fn main() {
         }
         )
         .invoke_handler(tauri::generate_handler![
-            is_tary_window_active
+            is_tary_window_active,
+            close_splashscreen
         ])
         .build(tauri::generate_context!())
         .expect("error while running tauri application");

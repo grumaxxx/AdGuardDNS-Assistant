@@ -5,6 +5,7 @@ import logo from './../logo.svg';
 import { useAuthorization } from '../../hooks/UseAuth';
 import { TwoFactorForm } from './TwoFactorForm';
 import { AuthForm } from './AuthForm';
+import { invoke } from '@tauri-apps/api';
 
 const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   setToken,
