@@ -83,7 +83,7 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
               {device.name}
             </div>
           </div>
-          <span onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
+          <span onClick={e => { e.stopPropagation(); }}>
             <Switch
               checked={device.settings.protection_enabled}
               onChange={() => handleSwitchChange(device)}
