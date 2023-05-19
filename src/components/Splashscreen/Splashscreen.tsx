@@ -1,7 +1,7 @@
 import React from 'react';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import './SplashScreen.css';
+import './Splashscreen.css';
 import Logo from './../logo.svg';
 
 const SplashScreen: React.FC = () => {
