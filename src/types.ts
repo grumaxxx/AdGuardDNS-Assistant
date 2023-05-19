@@ -46,6 +46,23 @@ export interface StatsItem {
   value: StatsValue;
 }
 
+export interface DeviceStatsValue {
+  blocked: number;
+  companies: number;
+  queries: number;
+}
+
+export interface DeviceStatsItem {
+  device_id: string;
+  last_activity_time_millis: number;
+  value: DeviceStatsValue;
+}
+
+export interface DeviceStat {
+  queries: number;
+  blocked: number;
+}
+
 export interface AccessToken {
   access_token: string;
   expires_in: number;

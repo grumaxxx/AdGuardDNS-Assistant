@@ -1,6 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-use tauri::{CustomMenuItem, SystemTrayMenuItem, Manager, SystemTray, SystemTrayEvent, WindowBuilder, WindowUrl, SystemTrayMenu, Wry, AppHandle, App, Size};
+use tauri::{CustomMenuItem, SystemTrayMenuItem, Manager, SystemTray, SystemTrayEvent, WindowBuilder, WindowUrl, SystemTrayMenu, Wry, AppHandle};
 use tauri_plugin_positioner::{Position, WindowExt, on_tray_event};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_window_state::{AppHandleExt, StateFlags};
@@ -104,69 +104,77 @@ async fn close_splashscreen(window: tauri::Window) {
   window.get_window("tray").unwrap().show().unwrap();
 }
 
-fn main() {
-    println!("Start TAURI app");
+fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
+    match event {
+        SystemTrayEvent::LeftClick { .. } => {
+            on_tray_event(app, &event);
+            match app.get_window("tray") {
+                None => {
+                    create_tray_window(app);
+                    create_splash_screen(app);
+                    let _ = app.save_window_state(StateFlags::all());
+                },
+                Some(label) => {
+                    match label.is_visible().unwrap() {
+                        true => {
+                            let _ = label.hide();
+                        }
+                        false => {
+                            let _ = label.move_window(Position::TrayCenter);
+                            let _ = label.show();
+                            let _ = label.set_focus();
+                        }
+                    }
+                }
+            };
+        },
+        SystemTrayEvent::RightClick { .. } => {
+            on_tray_event(app, &event);
+        }
+        SystemTrayEvent::MenuItemClick { id, .. } => {
+            match id.as_str() {
+                "settings" => {
+                    create_settings_window(app);
+                },
+                "query_log" => {
+                    let _ = app.get_window("tray").unwrap().hide();
+                    create_query_log_window(app);
+                },
+                "dashboard" => {
+                    let _ = app.get_window("tray").unwrap().hide();
+                    match app.get_window("dashboard")
+                    {
+                        None => {
+                            create_dashboard_window(app);
+                        },
+                        Some(_dashboard) => {
+                            unimplemented!();
+                        }
+                    }
+                }
+                "exit" => std::process::exit(0),
+                "logout" => {
+                    app.emit_all("logout", LogOut { flag: true }).unwrap();
+                },
+                _ => ()
+            }
+        },
+        _ => ()
+    }
+}
+
+#[tokio::main]
+async fn main() {
     let system_tray = SystemTray::new().with_menu(system_tray_menu());
     let mut app = tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
         .plugin(tauri_plugin_window_state::Builder::default().build())
-        .setup(|app| {
+        .setup(|_app| {
             Ok(())
         })
         .system_tray(system_tray)
-        .on_system_tray_event(|app, event|
-            match event {
-            SystemTrayEvent::LeftClick { .. } => {
-                on_tray_event(app, &event);
-                match app.get_window("tray") {
-                    // TODO: if windows doens't exist, first time create splash screen,
-                    // and turn it off in react, when data is ready
-                    None => {
-                        create_tray_window(app);
-                        create_splash_screen(app);
-                        let _ = app.save_window_state(StateFlags::all());
-                    },
-                    Some(label) => {
-                        match label.is_visible().unwrap() {
-                            true => {
-                                let _ = label.hide();
-                            }
-                            false => {
-                                let _ = label.show();
-                                let _ = label.set_focus();
-                            }
-                        }
-                    }
-                };
-            },
-            SystemTrayEvent::RightClick { .. } => {
-                on_tray_event(app, &event);
-            }
-            SystemTrayEvent::MenuItemClick { id, .. } => {
-                match id.as_str() {
-                    "settings" => {
-                        create_settings_window(app);
-                    },
-                    "query_log" => {
-                        let _ = app.get_window("tray").unwrap().hide();
-                        create_query_log_window(app);
-                    },
-                    "dashboard" => {
-                        create_dashboard_window(app);
-                        // TODO: don't create new windows, run from backgroung
-                        let _ = app.get_window("tray").unwrap().hide();
-                    },
-                    "exit" => std::process::exit(0),
-                    "logout" => {
-                        app.emit_all("logout", LogOut { flag: true }).unwrap();
-                    },
-                    _ => ()
-                }
-            },
-            _ => ()
-        }
-        )
+        .on_system_tray_event(tray_handler)
         .invoke_handler(tauri::generate_handler![
             is_tary_window_active,
             close_splashscreen

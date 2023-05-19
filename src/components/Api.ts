@@ -1,5 +1,5 @@
 import axios from "axios"
-import { QueryLogServerResponse, StatsItem, AccessToken, Device } from "../types";
+import { QueryLogServerResponse, StatsItem, AccessToken, Device, DeviceStatsItem, DeviceStat } from "../types";
 
 export const Authorization = async (username: string, password: string, mfa_token: string | null): Promise<AccessToken | Error> => {
   try {
@@ -58,6 +58,32 @@ export const getStatistics = async (token: string, timeFromMillis: number, timeT
     if ('stats' in response.data) {
       const data = response.data.stats as StatsItem[];
       return data;
+    }
+    return new Error(response.data.message);
+  } catch(error) {
+    return error instanceof Error ? error : new Error("An unknown error occurred.");
+  }
+}
+
+export const getDeviceStatistics = async (deviceID: string, token: string, timeFromMillis: number, timeToMillis: number): Promise<DeviceStat | Error> => {
+  try {
+    const response = await axios.get(
+    'https://api.adguard-dns.io/api/v1/stats/general',
+    {
+      headers: {
+        Accept: `*/*`,
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        time_from_millis: timeFromMillis,
+        time_to_millis: timeToMillis,
+        devices: deviceID,
+      },
+    });
+    if ('time_stats' in response.data) {
+      const data = response.data.time_stats.combined_stats.overall;
+      let result: DeviceStat = {blocked: data.blocked, queries: data.queries}
+      return result;
     }
     return new Error(response.data.message);
   } catch(error) {

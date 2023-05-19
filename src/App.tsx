@@ -1,5 +1,5 @@
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, message } from 'antd';
 import { useEffect } from 'react';
 import './index.css';
 import Tray from './components/Tray/Tray';
@@ -10,6 +10,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  message.config({
+    maxCount: 3,
+  });
 
   useEffect(() => {
     if (location.search === '?type=tray') {

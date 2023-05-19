@@ -1,4 +1,4 @@
-# AdGuard DNS App
+# AdGuard DNS Assistant
 
 <br/>
 <div align="center">
@@ -21,7 +21,7 @@
 
 ## Description
 
-AdGuard DNS App is a cross-platform application for tracking statistics and managing your personal DNS server. The app is aimed at quick access to statistics and viewing active devices. Please note that this application is not intended to completely replace the official website, but it provides the ability to access the site directly from the application.
+AdGuard DNS Assistant is a cross-platform application for tracking statistics and managing your personal DNS server. The app is aimed at quick access to statistics and viewing active devices. Please note that this application is not intended to completely replace the official website, but it provides the ability to access the site directly from the application.
 
 ## Technologies
 

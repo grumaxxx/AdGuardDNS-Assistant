@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { List, Switch, message } from 'antd';
 import { Device } from '../../types';
 import { useDevices } from '../../hooks/useDevices';
@@ -10,9 +10,10 @@ import { SafetyOutlined } from '@ant-design/icons';
 interface DevicesProps {
   refreshKey: number;
   token: string;
+  onDeviceSelected: (device: Device | null) => void;
 }
 
-const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
+const Devices: React.FC<DevicesProps> = ({ refreshKey, token, onDeviceSelected }) => {
   const { devices, setDevices } = useDevices(token, refreshKey);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
 
@@ -58,6 +59,15 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
   const handleItemClick = (device: Device, index: number) => {
     setSelectedItem(prevState => (prevState === index ? null : index));
   };
+  
+  useEffect(() => {
+    if (selectedItem !== null) {
+      const device = devices[selectedItem];
+      onDeviceSelected(device);
+    } else {
+      onDeviceSelected(null);
+    }
+  }, [selectedItem, devices, onDeviceSelected]);
 
   return (
     <List

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
@@ -10,11 +10,13 @@ import { listen } from '@tauri-apps/api/event';
 const { Header, Content } = Layout;
 import useStoredToken from '../../hooks/useStoredToken';
 import { invoke } from '@tauri-apps/api';
+import { Device } from '../../types';
 
 const Tray: React.FC = () => {
-  const [refreshKey, setRefreshKey] = React.useState(0);
-  const [spinning, setSpinning] = React.useState(false);
-  const [token, setToken] = React.useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [spinning, setSpinning] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const updateInterval = 5 * 60 * 1000;
   const intervalId = useRef<NodeJS.Timeout | null>(null);
 
@@ -123,9 +125,9 @@ const Tray: React.FC = () => {
             marginTop: 10,
           }}
         >
-          <Devices refreshKey={refreshKey} token={token} />
+          <Devices refreshKey={refreshKey} token={token} onDeviceSelected={setSelectedDevice}/>
         </div>
-        <Statistics refreshKey={refreshKey} token={token} />
+        <Statistics refreshKey={refreshKey} token={token} selectedDevice={selectedDevice}/>
       </Content>
     </Layout>
   );
