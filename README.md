@@ -22,7 +22,11 @@
 ## Description
 
 🚀🌐 AdGuard DNS Assistant is a cross-platform application for tracking statistics and managing your personal DNS server. The app is aimed at quick access to statistics and viewing active devices. Please note that this application is not intended to completely replace the official website, but it provides the ability to access the site directly from the application.
-◊
+
+## Releases
+
+📦 The latest releases of AdGuard DNS Assistant can be found on the [GitHub Releases](https://github.com/grumaxxx/AdGuardDNS-Assistant/releases) page. Feel free to check it out and download the latest version! 🎉
+
 ## Key Features:
 
  - ✨ Quick view of statistics from the system tray

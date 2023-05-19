@@ -69,7 +69,6 @@ fn create_tray_window(app: &AppHandle<Wry>) {
         .decorations(false)
         .build()
         .unwrap();
-    let _ = window.show();
     // let _ = window.open_devtools();
     let _ = window.move_window(Position::TrayCenter);
 }

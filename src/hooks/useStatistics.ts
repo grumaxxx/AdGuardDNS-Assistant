@@ -30,7 +30,7 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
             message.open({
               type: 'success',
               content: 'Statisctics updated',
-              duration: 2,
+              duration: 1,
             });
           }
         }
