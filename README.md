@@ -25,17 +25,17 @@
 ◊
 ## Key Features:
 
-✨ Quick view of statistics from the system tray
-📱 Device management from the system tray
-📋 Query Log
-🌐 Access to the website from the application
+ - ✨ Quick view of statistics from the system tray
+ - 📱 Device management from the system tray
+ - 📋 Query Log
+ - 🌐 Access to the website from the application
 
 ## Technologies
 
 The project is written using:
 
-🔧 React
-🖥️ Tauri
+ - 🔧 React
+ - 🖥️ Tauri
 
 ## License:
 
