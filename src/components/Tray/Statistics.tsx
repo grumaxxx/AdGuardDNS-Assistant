@@ -52,7 +52,12 @@ const Statistics: React.FC<StatisticsProps> = ({
   return (
     <div>
       <Segmented
-        style={{ marginTop: 10, marginBottom: 10 }}
+        style={{
+          marginTop: 10,
+          marginBottom: 10,
+          backgroundColor: '#f5f5f5',
+          borderRadius: '8px',
+        }}
         block
         options={Object.keys(TIME_SEGMENTS)}
         onChange={handleSegmentChange}
@@ -73,9 +78,14 @@ const Statistics: React.FC<StatisticsProps> = ({
             <Spin tip="Loading" size="large" />
           </div>
         ) : (
-          <Row gutter={10}>
+          <Row gutter={20}>
             <Col span={12}>
-              <Card bordered={false}>
+              <Card
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: '15px',
+                }}
+              >
                 <Statistic
                   title="DNS Queries Total"
                   value={formatNumber(displayedStat.total)}
@@ -88,7 +98,12 @@ const Statistics: React.FC<StatisticsProps> = ({
               </Card>
             </Col>
             <Col span={12}>
-              <Card bordered={false}>
+              <Card
+                style={{
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: '15px',
+                }}
+              >
                 <Statistic
                   title="DNS Queries Blocked"
                   value={formatNumber(displayedStat.blocked)}
