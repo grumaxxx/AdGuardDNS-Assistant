@@ -24,7 +24,7 @@ const Tray: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      invoke('close_splashscreen')
+      invoke('close_splashscreen');
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -125,9 +125,17 @@ const Tray: React.FC = () => {
             marginTop: 10,
           }}
         >
-          <Devices refreshKey={refreshKey} token={token} onDeviceSelected={setSelectedDevice}/>
+          <Devices
+            refreshKey={refreshKey}
+            token={token}
+            onDeviceSelected={setSelectedDevice}
+          />
         </div>
-        <Statistics refreshKey={refreshKey} token={token} selectedDevice={selectedDevice}/>
+        <Statistics
+          refreshKey={refreshKey}
+          token={token}
+          selectedDevice={selectedDevice}
+        />
       </Content>
     </Layout>
   );

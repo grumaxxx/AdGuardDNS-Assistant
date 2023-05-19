@@ -13,7 +13,11 @@ interface DevicesProps {
   onDeviceSelected: (device: Device | null) => void;
 }
 
-const Devices: React.FC<DevicesProps> = ({ refreshKey, token, onDeviceSelected }) => {
+const Devices: React.FC<DevicesProps> = ({
+  refreshKey,
+  token,
+  onDeviceSelected,
+}) => {
   const { devices, setDevices } = useDevices(token, refreshKey);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
 
@@ -59,7 +63,7 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token, onDeviceSelected }
   const handleItemClick = (device: Device, index: number) => {
     setSelectedItem(prevState => (prevState === index ? null : index));
   };
-  
+
   useEffect(() => {
     if (selectedItem !== null) {
       const device = devices[selectedItem];
@@ -90,10 +94,16 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token, onDeviceSelected }
                 marginLeft: '20px',
               }}
             >
-              {device.name.length > 20 ? `${device.name.substring(0, 18)}...` : device.name}
+              {device.name.length > 20
+                ? `${device.name.substring(0, 18)}...`
+                : device.name}
             </div>
           </div>
-          <span onClick={e => { e.stopPropagation(); }}>
+          <span
+            onClick={e => {
+              e.stopPropagation();
+            }}
+          >
             <Switch
               checked={device.settings.protection_enabled}
               onChange={() => handleSwitchChange(device)}

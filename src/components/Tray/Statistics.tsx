@@ -30,7 +30,11 @@ const TIME_SEGMENTS = {
   'Last 7 days': 7 * 24 * 60 * 60 * 1000,
 };
 
-const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token, selectedDevice }) => {
+const Statistics: React.FC<StatisticsProps> = ({
+  refreshKey,
+  token,
+  selectedDevice,
+}) => {
   const [timeRange, setTimerange] = useState<number>(
     TIME_SEGMENTS['Last hour']
   );
@@ -38,7 +42,7 @@ const Statistics: React.FC<StatisticsProps> = ({ refreshKey, token, selectedDevi
     selectedDevice,
     timeRange,
     token,
-    refreshKey,
+    refreshKey
   );
 
   const handleSegmentChange = (value: SegmentedValue) => {
