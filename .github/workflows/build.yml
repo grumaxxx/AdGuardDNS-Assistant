@@ -1,4 +1,4 @@
-name: App Builder
+name: Release
 on:
   push:
     tags:
@@ -7,48 +7,42 @@ on:
 
 jobs:
   release:
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            rust_target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            rust_target: x86_64-apple-darwin
-          - os: macos-latest
-            rust_target: aarch64-apple-darwin
-          - os: windows-latest
-            rust_target: x86_64-pc-windows-msvc
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build Changelog
-        id: build_changelog
-        run: echo "changelog=- ADD CHANGELOG" >> $GITHUB_OUTPUT
-
-      - name: Node.js setup
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-
-      - name: Install Rust (Stable)
-        run:
-          curl https://sh.rustup.rs -sSf | sh -s -- -y
-
       - name: Install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-20.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev
 
-      - name: Install app dependencies from lockfile and build web
-        # NOTE: comment out && yarn build if frontend does not have build script
-        run: yarn install --frozen-lockfile && yarn build
+      - name: Rust setup
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
+      - name: Sync node version and setup cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+          cache: "pnpm"
+
+      - name: Install app dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
@@ -58,11 +52,8 @@ jobs:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          # tauri-action replaces \_\_VERSION\_\_ with the app version
           tagName: ${{ github.ref_name }}
-          releaseName: "Sample Release for Modern Desktop App v__VERSION__"
-          releaseBody: |
-            ${{steps.build_changelog.outputs.changelog}}
-            See the assets to download this version and install.
+          releaseName: 'AdGuard DNS Assistant v__VERSION__'
+          releaseBody: "See the assets to download and install this version."
           releaseDraft: true
           prerelease: false

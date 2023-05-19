@@ -16,7 +16,7 @@
 ---
 
 <div align="center">
-    Please note that this is an unofficial AdGuard DNS application.
+    ⚠️ Please note that this is an unofficial AdGuard DNS application.
 </div>
 
 ## Description
