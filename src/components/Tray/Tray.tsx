@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
-import { Row, Col, Button, Layout, message } from 'antd';
+import { Row, Col, Button, Layout } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import Auth from '../Auth/Auth';
 import './Tray.css';

@@ -2,6 +2,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use tauri::{CustomMenuItem, SystemTrayMenuItem, Manager, SystemTray, SystemTrayEvent, WindowBuilder, WindowUrl, SystemTrayMenu, Wry, AppHandle, App, Size};
 use tauri_plugin_positioner::{Position, WindowExt, on_tray_event};
+use tauri_plugin_autostart::MacosLauncher;
+use tauri_plugin_window_state::{AppHandleExt, StateFlags};
 
 fn system_tray_menu() -> SystemTrayMenu {
     SystemTrayMenu::new()
@@ -107,6 +109,8 @@ fn main() {
     let system_tray = SystemTray::new().with_menu(system_tray_menu());
     let mut app = tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
+        .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .setup(|app| {
             Ok(())
         })
@@ -121,6 +125,7 @@ fn main() {
                     None => {
                         create_tray_window(app);
                         create_splash_screen(app);
+                        let _ = app.save_window_state(StateFlags::all());
                     },
                     Some(label) => {
                         match label.is_visible().unwrap() {

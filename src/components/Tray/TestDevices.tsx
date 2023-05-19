@@ -32,7 +32,7 @@ interface Device {
 const testDevices: Device[] = [
   {
     id: '1',
-    name: 'Device 1',
+    name: 'Device with very long name',
     device_type: 'WINDOWS',
     dns_server_id: 'server1',
     dns_addresses: {

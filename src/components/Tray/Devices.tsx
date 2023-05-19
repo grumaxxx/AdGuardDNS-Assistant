@@ -80,7 +80,7 @@ const Devices: React.FC<DevicesProps> = ({ refreshKey, token }) => {
                 marginLeft: '20px',
               }}
             >
-              {device.name}
+              {device.name.length > 20 ? `${device.name.substring(0, 18)}...` : device.name}
             </div>
           </div>
           <span onClick={e => { e.stopPropagation(); }}>
