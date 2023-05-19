@@ -37,12 +37,6 @@ The project is written using:
 - Query Log
 - Access to the website from the application
 
-## Usage
-
-Users can select a time period to view DNS query statistics by clicking on one of the buttons: 'Last hour', 'Last day', or 'Last 7 days'. The statistics are automatically updated when a new time period is selected.
-
-Additionally, you can enable/disable device protection.
-
 ## License:
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
