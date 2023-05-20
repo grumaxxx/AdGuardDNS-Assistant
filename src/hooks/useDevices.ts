@@ -25,8 +25,7 @@ export const useDevices = (token: string, refreshKey: number) => {
     }
   }
 
-  // fetchDevices()
-  setDevices(testDevices);
+  fetchDevices()
 
   }, [token, refreshKey])
 
