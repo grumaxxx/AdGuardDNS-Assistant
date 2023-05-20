@@ -31,8 +31,10 @@
 
  - ✨ Quick view of statistics from the system tray
  - 📱 Device management from the system tray
- - 📋 Query Log
  - 🌐 Access to the website from the application
+ - 📋 Query Log (planned in upcoming updates)
+
+![screen](./assets/tray_screen.png)
 
 ## Technologies
 

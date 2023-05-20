@@ -32,7 +32,7 @@ interface Device {
 const testDevices: Device[] = [
   {
     id: '1',
-    name: 'Device with very long name',
+    name: 'Windows laptop',
     device_type: 'WINDOWS',
     dns_server_id: 'server1',
     dns_addresses: {
@@ -56,7 +56,7 @@ const testDevices: Device[] = [
   },
   {
     id: '1',
-    name: 'Device 2',
+    name: 'Mark mobile',
     device_type: 'ANDROID',
     dns_server_id: 'server1',
     dns_addresses: {
@@ -80,7 +80,7 @@ const testDevices: Device[] = [
   },
   {
     id: '1',
-    name: 'Device 3',
+    name: 'Home router',
     device_type: 'ROUTER',
     dns_server_id: 'server1',
     dns_addresses: {
@@ -104,7 +104,7 @@ const testDevices: Device[] = [
   },
   {
     id: '1',
-    name: 'Device 4',
+    name: 'Sofia',
     device_type: 'IOS',
     dns_server_id: 'server1',
     dns_addresses: {
@@ -128,7 +128,7 @@ const testDevices: Device[] = [
   },
   {
     id: '1',
-    name: 'Device 5',
+    name: 'macbook (office)',
     device_type: 'MAC',
     dns_server_id: 'server1',
     dns_addresses: {
