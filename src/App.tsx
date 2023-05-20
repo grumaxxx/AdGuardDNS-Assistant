@@ -29,6 +29,7 @@ const App = () => {
     <ConfigProvider
       theme={{
         token: {
+          fontFamily: `'Rubik', sans-serif`,
           colorPrimary: '#3c81f6',
         },
       }}

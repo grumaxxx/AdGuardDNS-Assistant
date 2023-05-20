@@ -17,6 +17,7 @@
     "@types/styled-components": "^5.1.26",
     "antd": "^5.4.7",
     "axios": "^1.4.0",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",

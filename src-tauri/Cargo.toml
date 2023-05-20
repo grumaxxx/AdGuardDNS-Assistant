@@ -2,9 +2,9 @@
 name = "adguard-dns-assistant"
 version = "0.0.0"
 description = "AdGuard DNS Assistant"
-authors = ["github.com/grumaxxx"]
-license = ""
-repository = ""
+authors = ["grumaxx <maxgrupper@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/grumaxxx/AdGuardDNS-Assistant"
 edition = "2021"
 
 [build-dependencies]
