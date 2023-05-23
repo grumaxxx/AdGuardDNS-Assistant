@@ -5,18 +5,23 @@ import { getGeneralStatistics } from "../components/Api";
 import { Device, CategoryTypeStat, GeneralStat } from "../types";
 import { trace, error } from "tauri-plugin-log-api";
 
-interface DisplayedStat {
-  total: number;
-  blocked: number;
-}
 
 export const useStatistics = (selectedDevice: Device | null,timeRange: number, token: string, refreshKey: number) => {
-  const [displayedStat, setDisplayedStat] = useState<DisplayedStat>({
-    blocked: 0,
-    total: 0,
-  });
-  const [categoryStat, setCategoryStat] = useState<CategoryTypeStat[]>([])
   const [loading, setLoading] = useState(false);
+  const [stat, setStat] = useState<GeneralStat>({
+    categories: [
+      {
+        category_type: "",
+        queries_percent: 0,
+        queries: 0,
+      },
+    ],
+    overall: {
+      queries: 0,
+      blocked: 0,
+      companies: 0,
+    },
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -48,8 +53,7 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
         } else {
           show_stat_message()
           const data = result as GeneralStat;
-          setDisplayedStat({ total: data.overall.queries, blocked: data.overall.blocked })
-          setCategoryStat(data.categories)
+          setStat(data)
           trace('Statisctics updated');
         }
       } catch (e) {
@@ -66,5 +70,5 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
 
   }, [refreshKey, token, timeRange, selectedDevice]);
 
-  return {displayedStat, categoryStat, loading};
+  return {stat, loading};
 };

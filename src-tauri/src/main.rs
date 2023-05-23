@@ -16,7 +16,6 @@ use tauri_plugin_log::{
 async fn main() {
     let mut log = tauri_plugin_log::Builder::default()
     .targets([
-        // LogTarget::Folder(tauri::api::path::home_dir().unwrap().join(".adguard-dns-assistant")),
         LogTarget::LogDir,
         LogTarget::Stdout,
         LogTarget::Webview,

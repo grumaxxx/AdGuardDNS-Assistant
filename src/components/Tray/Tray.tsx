@@ -10,7 +10,7 @@ import { listen } from '@tauri-apps/api/event';
 const { Header, Content } = Layout;
 import useStoredToken from '../../hooks/useStoredToken';
 import { Device } from '../../types';
-import { trace, error } from "tauri-plugin-log-api";
+import { trace, error } from 'tauri-plugin-log-api';
 
 const Tray: React.FC = () => {
   const [refreshKey, setRefreshKey] = useState(0);

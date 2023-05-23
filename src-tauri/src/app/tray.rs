@@ -71,12 +71,7 @@ pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
 pub fn system_tray_menu() -> SystemTrayMenu {
   SystemTrayMenu::new()
       .add_item(CustomMenuItem::new("dashboard", "Open Full Dashboard"))
-    //   .add_item(CustomMenuItem::new("query_log", "Query Log"))
       .add_native_item(SystemTrayMenuItem::Separator)
-    //   .add_item(CustomMenuItem::new("settings".to_string(), "Open Settings")
-    //       .accelerator("CmdOrCtrl+Shift+P")
-    //   )
-    //   .add_native_item(SystemTrayMenuItem::Separator)
       .add_item(CustomMenuItem::new("logout".to_string(), "Log Out"))
       .add_item(CustomMenuItem::new("exit".to_string(), "Exit"))
 }

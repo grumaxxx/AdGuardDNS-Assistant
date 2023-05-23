@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import { Card, Col, Spin, Row, Statistic, Segmented, Modal, Button } from 'antd';
+import { Card, Col, Spin, Row, Statistic, Segmented } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useStatistics } from '../../hooks/useStatistics';
 import { SegmentedValue } from 'antd/es/segmented';
 import { Device } from '../../types';
-import { PieChart } from './Piechart';
 
 function formatNumber(num: number): string {
   if (num < 1000) {
@@ -36,15 +35,16 @@ const Statistics: React.FC<StatisticsProps> = ({
   token,
   selectedDevice,
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [timeRange, setTimerange] = useState<number>(TIME_SEGMENTS['Last hour']);
-  const { displayedStat, categoryStat, loading } = useStatistics(
+  const [timeRange, setTimerange] = useState<number>(
+    TIME_SEGMENTS['Last hour']
+  );
+  const { stat, loading } = useStatistics(
     selectedDevice,
     timeRange,
     token,
     refreshKey
   );
-  
+
   const handleSegmentChange = (value: SegmentedValue) => {
     setTimerange(TIME_SEGMENTS[value as keyof typeof TIME_SEGMENTS]);
   };
@@ -84,13 +84,11 @@ const Statistics: React.FC<StatisticsProps> = ({
                 style={{
                   backgroundColor: '#f5f5f5',
                   borderRadius: '15px',
-                  cursor: 'pointer',
                 }}
-                onClick={() => setModalVisible(true)}
               >
                 <Statistic
                   title="DNS Queries Total"
-                  value={formatNumber(displayedStat.total)}
+                  value={formatNumber(stat.overall.queries)}
                   valueStyle={{
                     color: '#3c81f6',
                     fontFamily: 'Rubik, sans-serif',
@@ -108,7 +106,7 @@ const Statistics: React.FC<StatisticsProps> = ({
               >
                 <Statistic
                   title="DNS Queries Blocked"
-                  value={formatNumber(displayedStat.blocked)}
+                  value={formatNumber(stat.overall.blocked)}
                   valueStyle={{
                     color: '#f04444',
                     fontFamily: 'Rubik, sans-serif',
@@ -120,14 +118,6 @@ const Statistics: React.FC<StatisticsProps> = ({
           </Row>
         )}
       </div>
-      <Modal
-        open={modalVisible}
-        title="Queries by categories"
-        onCancel={() => setModalVisible(false)}
-        onOk={() => setModalVisible(false)}
-      >
-        <PieChart data={categoryStat}/>
-      </Modal>
     </div>
   );
 };

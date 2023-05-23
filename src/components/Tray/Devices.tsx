@@ -5,7 +5,7 @@ import { useDevices } from '../../hooks/useDevices';
 import { deviceIcons } from './DeviceIcons';
 import { turnOffDevice, turnOnDevice } from '../Api';
 import { useState } from 'react';
-import { trace, error } from "tauri-plugin-log-api";
+import { trace, error } from 'tauri-plugin-log-api';
 import './Tray.css';
 import { SafetyOutlined } from '@ant-design/icons';
 interface DevicesProps {
