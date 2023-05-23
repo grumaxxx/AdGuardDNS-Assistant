@@ -77,6 +77,6 @@ pub fn system_tray_menu() -> SystemTrayMenu {
     //       .accelerator("CmdOrCtrl+Shift+P")
     //   )
     //   .add_native_item(SystemTrayMenuItem::Separator)
-      .add_item(CustomMenuItem::new("logout".to_string(), "Log out"))
+      .add_item(CustomMenuItem::new("logout".to_string(), "Log Out"))
       .add_item(CustomMenuItem::new("exit".to_string(), "Exit"))
 }
