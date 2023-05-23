@@ -4,16 +4,43 @@
 mod app;
 use app::{cmd, tray};
 
+use log::trace;
 use tauri::{SystemTray};
 use tauri_plugin_autostart::MacosLauncher;
-
+use tauri_plugin_log::{
+    fern::colors::{Color, ColoredLevelConfig},
+    LogTarget,
+  };
 
 #[tokio::main]
 async fn main() {
+    // let mut log = tauri_plugin_log::Builder::default()
+    // .targets([
+    //     // LogTarget::Folder(tauri::api::path::home_dir().unwrap().join(".adguard-dns-assistant")),
+    //     LogTarget::LogDir,
+    //     LogTarget::Stdout,
+    //     LogTarget::Webview,
+    // ])
+    // .level(log::LevelFilter::Trace);
+
+    // if cfg!(debug_assertions) {
+    //     log = log.with_colors(ColoredLevelConfig {
+    //     error: Color::Red,
+    //     warn: Color::Yellow,
+    //     debug: Color::Blue,
+    //     info: Color::BrightGreen,
+    //     trace: Color::Cyan,
+    //     });
+    // }
+    trace!("Create tray window");
     let system_tray = SystemTray::new().with_menu(tray::system_tray_menu());
     let mut app = tauri::Builder::default()
+        .plugin(tauri_plugin_log::Builder::default().level(log::LevelFilter::Debug).build())
         .plugin(tauri_plugin_positioner::init())
-        .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
+        .plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            None
+        ))
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .setup(|_app| {
             Ok(())

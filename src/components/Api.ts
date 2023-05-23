@@ -1,5 +1,5 @@
 import axios from "axios"
-import { QueryLogServerResponse, StatsItem, AccessToken, Device, DeviceStatsItem, DeviceStat } from "../types";
+import { QueryLogServerResponse, StatsItem, AccessToken, Device, GeneralStat, DeviceStat, CombinedOverallStat, CategoryTypeStat } from "../types";
 
 export const Authorization = async (username: string, password: string, mfa_token: string | null): Promise<AccessToken | Error> => {
   try {
@@ -65,7 +65,7 @@ export const getStatistics = async (token: string, timeFromMillis: number, timeT
   }
 }
 
-export const getDeviceStatistics = async (deviceID: string, token: string, timeFromMillis: number, timeToMillis: number): Promise<DeviceStat | Error> => {
+export const getGeneralStatistics = async (deviceID: string | null, token: string, timeFromMillis: number, timeToMillis: number): Promise<GeneralStat | Error> => {
   try {
     const response = await axios.get(
     'https://api.adguard-dns.io/api/v1/stats/general',
@@ -81,8 +81,9 @@ export const getDeviceStatistics = async (deviceID: string, token: string, timeF
       },
     });
     if ('time_stats' in response.data) {
-      const data = response.data.time_stats.combined_stats.overall;
-      let result: DeviceStat = {blocked: data.blocked, queries: data.queries}
+      const categories: CategoryTypeStat[] = response.data.category_types_stats.stats;
+      const overall: CombinedOverallStat = response.data.time_stats.combined_stats.overall;
+      const result: GeneralStat = {categories: categories, overall: overall};
       return result;
     }
     return new Error(response.data.message);

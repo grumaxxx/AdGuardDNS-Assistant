@@ -3,6 +3,7 @@ import { Authorization } from "../components/Api";
 import { AccessToken, TokenServerError } from "../types";
 import { message } from "antd";
 import { AxiosError } from "axios";
+import { trace, error } from "tauri-plugin-log-api";
 
 export const useAuthorization = () => {
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,7 @@ export const useAuthorization = () => {
       setLoading(false);
       if (error && (error as AxiosError).response) {
         const serverError = (error as AxiosError).response?.data as TokenServerError;
-        console.log(serverError.error_code)
+        trace(serverError.error_code)
         if (serverError.error_code == '2fa_required') {
           setTwoFactorRequired(true);
         } else {

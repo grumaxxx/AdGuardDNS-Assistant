@@ -9,8 +9,8 @@ import './Tray.css';
 import { listen } from '@tauri-apps/api/event';
 const { Header, Content } = Layout;
 import useStoredToken from '../../hooks/useStoredToken';
-import { invoke } from '@tauri-apps/api';
 import { Device } from '../../types';
+import { trace, error } from "tauri-plugin-log-api";
 
 const Tray: React.FC = () => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -23,14 +23,6 @@ const Tray: React.FC = () => {
   useStoredToken(setToken);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      invoke('close_splashscreen');
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     let unlistenFunc: () => void;
     (async () => {
       try {
@@ -38,8 +30,10 @@ const Tray: React.FC = () => {
           localStorage.removeItem('access_token');
           setToken(null);
         });
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        if (e instanceof Error) {
+          error(e.message);
+        }
       }
     })();
 
@@ -52,7 +46,7 @@ const Tray: React.FC = () => {
 
   const intervalEffect = () => {
     intervalId.current = setInterval(() => {
-      console.log(`Statistics was autoupdated`);
+      trace(`Statistics was autoupdated`);
       setRefreshKey((oldKey: number) => oldKey + 1);
     }, updateInterval);
     return () => {
@@ -74,7 +68,7 @@ const Tray: React.FC = () => {
       clearInterval(intervalId.current);
     }
     setRefreshKey((oldKey: number) => oldKey + 1);
-    console.log('Refresh button clicked');
+    trace('Refresh button clicked');
     setTimeout(() => setSpinning(false), 300);
     intervalId.current = setInterval(() => {
       setRefreshKey((oldKey: number) => oldKey + 1);

@@ -1,9 +1,9 @@
-import { getStatistics, getDeviceStatistics } from "../components/Api";
 import { message } from "antd";
-import { DeviceStat, StatsItem } from "../types";
 import { useState, useEffect } from "react";
 import { invoke } from '@tauri-apps/api/tauri'
-import { Device } from "../types";
+import { getGeneralStatistics } from "../components/Api";
+import { Device, CategoryTypeStat, GeneralStat } from "../types";
+import { trace, error } from "tauri-plugin-log-api";
 
 interface DisplayedStat {
   total: number;
@@ -15,6 +15,7 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
     blocked: 0,
     total: 0,
   });
+  const [categoryStat, setCategoryStat] = useState<CategoryTypeStat[]>([])
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -37,62 +38,33 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
       )
     }
 
-    const fetchTotalStatistics = async () => {
+    const fetchStatisctic = async (device: Device | null) => {
       try {
-        console.log(`Selected device is ${selectedDevice?.name}`)
-        const result = await getStatistics(token, timeFromMillis, timeToMillis);
+        trace(`Selected device is ${selectedDevice?.name}`)
+        const result = await getGeneralStatistics(device ? device.id : null, token, timeFromMillis, timeToMillis);
         if (result instanceof Error) {
-          console.error(result.message);
+          error(result.message);
           message.error(`Error to get data from server: ${result.message}`);
         } else {
           show_stat_message()
-          const data = result as StatsItem[];
-          const sumBlocked = data.reduce(
-            (accumulator, currentValue) =>
-            accumulator + currentValue.value.blocked,
-            0
-          );
-          const sumQueries = data.reduce(
-            (accumulator, currentValue) =>
-            accumulator + currentValue.value.queries,
-            0
-          );
-          setDisplayedStat({ total: sumQueries, blocked: sumBlocked });
-          console.log('Stats updated');
+          const data = result as GeneralStat;
+          setDisplayedStat({ total: data.overall.queries, blocked: data.overall.blocked })
+          setCategoryStat(data.categories)
+          trace('Statisctics updated');
         }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchDeviceStatisctic =async (device: Device) => {
-      try {
-        console.log(`Selected device is ${selectedDevice?.name}`)
-        const result = await getDeviceStatistics(device.id, token, timeFromMillis, timeToMillis);
-        if (result instanceof Error) {
-          console.error(result.message);
-          message.error(`Error to get data from server: ${result.message}`);
-        } else {
-          show_stat_message()
-          const data = result as DeviceStat;
-          setDisplayedStat({ total: data.queries, blocked: data.blocked });
-          console.log('Stats for device updated');
+      } catch (e) {
+        if (e instanceof Error) {
+          error(e.message);
         }
-      } catch (error) {
-        console.error(error);
       } finally {
+        invoke('close_splashscreen');
         setLoading(false);
       }
     }
 
-    if (selectedDevice) {
-      fetchDeviceStatisctic(selectedDevice);
-    } else {
-      fetchTotalStatistics();
-    }
+    fetchStatisctic(selectedDevice);
+
   }, [refreshKey, token, timeRange, selectedDevice]);
 
-  return {displayedStat, loading};
+  return {displayedStat, categoryStat, loading};
 };

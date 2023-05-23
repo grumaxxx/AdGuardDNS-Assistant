@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AccessToken } from '../types';
 import { RefreshToken } from '../components/Api';
+import { trace, error } from "tauri-plugin-log-api";
 
 const useStoredToken = (setToken: (token: string | null) => void) => {
   const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
@@ -17,8 +18,10 @@ const useStoredToken = (setToken: (token: string | null) => void) => {
         localStorage.setItem('refresh_token', response.refresh_token);
         localStorage.setItem('token_expires_at', (Date.now() / 1000 + response.expires_in).toString());
         setToken(response.access_token);
-      } catch (error) {
-        console.error(error);
+      } catch (e) {
+        if (e instanceof Error) {
+          error(e.message);
+        }
         setToken(null);
       }
     }
@@ -32,10 +35,10 @@ const useStoredToken = (setToken: (token: string | null) => void) => {
       setToken(accessToken);
       const expiresIn = Number(expiresAt) - Date.now() / 1000;
       if (expiresIn <= 0) {
-        console.log(`Refreshing token`)
+        trace(`Refreshing token`)
         refreshStoredToken();
       } else {
-        console.log(`Existing token expires in ${expiresIn}s, set timer`)
+        trace(`Existing token expires in ${expiresIn}s, set timer`)
         const intervalId = setTimeout(() => {
           refreshStoredToken();
         }, expiresIn * 1000);

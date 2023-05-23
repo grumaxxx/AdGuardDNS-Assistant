@@ -30,10 +30,10 @@ const QueryLog: React.FC = () => {
     // if (token) {
     //   const result = await getQueryLog(token, timeFromMillis, timeToMillis);
     //   if (result instanceof Error) {
-    //     console.error(result.message);
+    //     error(result.message);
     //     message.error(`Error: ${result.message}`);
     //   } else {
-    //     console.log(result.items);
+    //     trace(result.items);
     //     setItems(prevItems => [...prevItems, ...result.items]);
     //   }
     // }

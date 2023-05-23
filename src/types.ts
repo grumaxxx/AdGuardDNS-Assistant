@@ -106,3 +106,20 @@ export interface Device {
   name: string;
   settings: DeviceSettings;
 }
+
+export interface CategoryTypeStat {
+  category_type: string;
+  queries_percent: number;
+  queries: number;
+};
+
+export interface CombinedOverallStat {
+  queries: number;
+  blocked: number;
+  companies: number;
+}
+
+export interface GeneralStat {
+  categories: CategoryTypeStat[];
+  overall: CombinedOverallStat;
+}

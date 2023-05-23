@@ -5,6 +5,7 @@ import { useDevices } from '../../hooks/useDevices';
 import { deviceIcons } from './DeviceIcons';
 import { turnOffDevice, turnOnDevice } from '../Api';
 import { useState } from 'react';
+import { trace, error } from "tauri-plugin-log-api";
 import './Tray.css';
 import { SafetyOutlined } from '@ant-design/icons';
 interface DevicesProps {
@@ -22,7 +23,7 @@ const Devices: React.FC<DevicesProps> = ({
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
 
   const handleSwitchChange = (device: Device) => {
-    console.log(
+    trace(
       `Try to change device protection: ${device.id}, current state: ${device.settings.protection_enabled}`
     );
     if (device.settings.protection_enabled) {

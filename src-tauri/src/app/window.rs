@@ -27,7 +27,6 @@ pub fn create_splash_screen(app: &AppHandle<Wry>) {
 pub fn create_query_log_window(app: &AppHandle<Wry>) {
   let window = WindowBuilder::new(app, "query_log", WindowUrl::App("index.html/?type=query_log".into()))
       .inner_size(600.0, 600.0)
-      .always_on_top(true)
       .title("AdGuard DNS Query Log")
       .build()
       .unwrap();
@@ -38,7 +37,6 @@ pub fn create_query_log_window(app: &AppHandle<Wry>) {
 pub fn create_dashboard_window(app: &AppHandle<Wry>) {
   let window = WindowBuilder::new(app, "dashboard", WindowUrl::External("https://adguard-dns.io/en/dashboard/".parse().unwrap()))
       .inner_size(1200.0, 700.0)
-      .always_on_top(true)
       .title("AdGuard DNS Dashboard")
       .build()
       .unwrap();

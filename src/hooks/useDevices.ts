@@ -4,6 +4,7 @@ import { Device } from "../types";
 import { message } from "antd";
 import { AxiosError } from "axios";
 import testDevices from "../components/Tray/TestDevices";
+import { trace, error } from "tauri-plugin-log-api";
 
 export const useDevices = (token: string, refreshKey: number) => {
   const [devices, setDevices] = useState<Device[]>([]);
@@ -16,7 +17,7 @@ export const useDevices = (token: string, refreshKey: number) => {
       if (result instanceof Error) {
         throw result;
       }
-      console.log('Devices fetched');
+      trace('Devices fetched');
       setDevices(result);
     } catch (error) {
       message.error(

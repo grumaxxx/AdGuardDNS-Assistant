@@ -5,6 +5,7 @@ import logo from './../logo.svg';
 import { useAuthorization } from '../../hooks/UseAuth';
 import { TwoFactorForm } from './TwoFactorForm';
 import { AuthForm } from './AuthForm';
+import { trace, error } from "tauri-plugin-log-api";
 
 const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   setToken,
@@ -26,7 +27,7 @@ const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    trace('Failed:', errorInfo);
   };
 
   const handleFormFinish = async (values: { token: string }) => {
@@ -46,7 +47,7 @@ const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   };
 
   const handleFormFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    trace('Failed:', errorInfo);
   };
 
   return (
