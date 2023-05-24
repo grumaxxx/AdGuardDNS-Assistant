@@ -2,13 +2,17 @@ use tauri::{WindowBuilder, WindowUrl, Wry, AppHandle};
 use tauri_plugin_positioner::{Position, WindowExt };
 
 pub fn create_tray_window(app: &AppHandle<Wry>) {
-  let window = WindowBuilder::new(app, "tray", WindowUrl::App("index.html?type=tray".into()))
+  let mut builder = WindowBuilder::new(app, "tray", WindowUrl::App("index.html?type=tray".into()))
       .inner_size(350.0, 560.0)
       .always_on_top(true)
-      .resizable(false)
-      .decorations(false)
-      .build()
-      .unwrap();
+      .skip_taskbar(true)
+      .min_inner_size(350.0, 560.0)
+      .resizable(true);
+  #[cfg(target_os = "macos")]
+  {
+    builder = builder.decorations(false);
+  }
+  let window = builder.build().unwrap();
   window.move_window(Position::TrayCenter).unwrap();
 }
 

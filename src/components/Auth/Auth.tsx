@@ -6,6 +6,7 @@ import { useAuthorization } from '../../hooks/UseAuth';
 import { TwoFactorForm } from './TwoFactorForm';
 import { AuthForm } from './AuthForm';
 import { trace, error } from 'tauri-plugin-log-api';
+import { invoke } from '@tauri-apps/api/tauri';
 
 const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   setToken,

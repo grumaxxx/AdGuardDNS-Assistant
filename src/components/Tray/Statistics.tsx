@@ -1,22 +1,10 @@
 import React, { useEffect } from 'react';
 import { Card, Col, Spin, Row, Statistic, Segmented } from 'antd';
-import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useStatistics } from '../../hooks/useStatistics';
 import { SegmentedValue } from 'antd/es/segmented';
 import { Device } from '../../types';
-
-function formatNumber(num: number): string {
-  if (num < 1000) {
-    return num.toFixed(0);
-  } else if (num < 100000) {
-    return (num / 1000).toFixed(1) + 'K';
-  } else if (num < 1000000) {
-    return Math.round(num / 1000) + 'K';
-  } else {
-    return (num / 1000000).toFixed(1) + 'M';
-  }
-}
+import { StatisticCard, StatisticSpin } from './StatisticCard';
 
 interface StatisticsProps {
   refreshKey: number;
@@ -66,57 +54,7 @@ const Statistics: React.FC<StatisticsProps> = ({
         className="site-layout-content"
         style={{ marginTop: 10, marginBottom: 20, minHeight: '140px' }}
       >
-        {loading ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '140px',
-            }}
-          >
-            <Spin tip="Loading" size="large" />
-          </div>
-        ) : (
-          <Row gutter={20}>
-            <Col span={12}>
-              <Card
-                style={{
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: '15px',
-                }}
-              >
-                <Statistic
-                  title="DNS Queries Total"
-                  value={formatNumber(stat.overall.queries)}
-                  valueStyle={{
-                    color: '#3c81f6',
-                    fontFamily: 'Rubik, sans-serif',
-                  }}
-                  prefix={<SwapOutlined />}
-                />
-              </Card>
-            </Col>
-            <Col span={12}>
-              <Card
-                style={{
-                  backgroundColor: '#f5f5f5',
-                  borderRadius: '15px',
-                }}
-              >
-                <Statistic
-                  title="DNS Queries Blocked"
-                  value={formatNumber(stat.overall.blocked)}
-                  valueStyle={{
-                    color: '#f04444',
-                    fontFamily: 'Rubik, sans-serif',
-                  }}
-                  prefix={<StopOutlined />}
-                />
-              </Card>
-            </Col>
-          </Row>
-        )}
+        {loading ? <StatisticSpin /> : <StatisticCard overall={stat.overall} />}
       </div>
     </div>
   );

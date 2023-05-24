@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AccessToken } from '../types';
 import { RefreshToken } from '../components/Api';
 import { trace, error } from "tauri-plugin-log-api";
+import { invoke } from '@tauri-apps/api';
 
 const useStoredToken = (setToken: (token: string | null) => void) => {
   const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
@@ -44,6 +45,8 @@ const useStoredToken = (setToken: (token: string | null) => void) => {
         }, expiresIn * 1000);
         setRefreshInterval(intervalId);
       }
+    } else {
+      invoke('close_splashscreen');
     }
   }, [setToken]);
 
