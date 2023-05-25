@@ -2,7 +2,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod app;
+mod conf;
+
 use app::{cmd, tray};
+use conf::AppConf;
 
 use log::trace;
 use tauri::{SystemTray};
@@ -14,6 +17,8 @@ use tauri_plugin_log::{
 
 #[tokio::main]
 async fn main() {
+    let _app_conf = AppConf::read().write();
+
     let mut log = tauri_plugin_log::Builder::default()
     .targets([
         LogTarget::LogDir,

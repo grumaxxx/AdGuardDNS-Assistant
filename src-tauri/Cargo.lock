@@ -6,6 +6,7 @@ version = 3
 name = "adguard-dns-assistant"
 version = "0.0.0"
 dependencies = [
+ "anyhow",
  "log",
  "reqwest",
  "serde",

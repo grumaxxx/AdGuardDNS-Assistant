@@ -3,7 +3,6 @@ import { ConfigProvider, message } from 'antd';
 import { useEffect } from 'react';
 import './index.css';
 import Tray from './components/Tray/Tray';
-import QueryLog from './components/QueryLog/QueryLog';
 import SplashScreen from './components/Splashscreen/Splashscreen';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -18,8 +17,6 @@ const App = () => {
   useEffect(() => {
     if (location.search === '?type=tray') {
       navigate('/tray');
-    } else if (location.search === '?type=query_log') {
-      navigate('/query_log');
     } else if (location.search === '?type=splash_screen') {
       navigate('/splash_screen');
     }
@@ -37,7 +34,6 @@ const App = () => {
       <ErrorBoundary>
         <Routes>
           <Route path="/tray" element={<Tray />} />
-          <Route path="/query_log" element={<QueryLog />} />
           <Route path="/splash_screen" element={<SplashScreen />} />
         </Routes>
       </ErrorBoundary>
