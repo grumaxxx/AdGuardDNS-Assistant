@@ -23,7 +23,6 @@ export const useAuthorization = () => {
 
         localStorage.setItem('token_expires_at', expireAt.toString());
         
-        message.success('Success');
         setLoading(false);
         return data.access_token;
       } else {
