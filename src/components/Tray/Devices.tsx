@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { List, Switch, message } from 'antd';
+import { List, Switch, message, Skeleton } from 'antd';
 import { Device } from '../../types';
 import { useDevices } from '../../hooks/useDevices';
 import { deviceIcons } from './DeviceIcons';
 import { turnOffDevice, turnOnDevice } from '../Api';
 import { useState } from 'react';
-import { trace, error } from 'tauri-plugin-log-api';
+import { trace } from 'tauri-plugin-log-api';
 import './Tray.css';
 import { SafetyOutlined } from '@ant-design/icons';
 interface DevicesProps {

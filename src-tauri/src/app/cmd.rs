@@ -21,6 +21,8 @@ pub async fn close_splashscreen(window: Window) {
   if let Some(splashscreen) = window.get_window("splashscreen") {
     println!("Close splashscreen");
     splashscreen.close().unwrap();
-    window.get_window("tray").unwrap().show().unwrap();
+    let tray = window.get_window("tray").unwrap();
+    let _ = tray.show();
+    let _ = tray.set_focus();
   }
 }

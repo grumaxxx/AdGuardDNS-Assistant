@@ -1,9 +1,10 @@
-import { Card, Col, Row, Statistic, Spin } from 'antd';
+import { Card, Col, Row, Statistic, Spin, Skeleton } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { CombinedOverallStat } from '../../types';
 
 interface StatisticCardProps {
   overall: CombinedOverallStat;
+  loading: boolean;
 }
 
 function formatNumber(num: number): string {
@@ -18,9 +19,9 @@ function formatNumber(num: number): string {
   }
 }
 
-export const StatisticCard: React.FC<StatisticCardProps> = ({ overall }) => {
+export const StatisticCard: React.FC<StatisticCardProps> = ({ overall, loading }) => {
   return (
-    <Row gutter={20}>
+    <Row gutter={16}>
       <Col span={12}>
         <Card
           style={{

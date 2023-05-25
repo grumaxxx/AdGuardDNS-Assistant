@@ -29,20 +29,6 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
     const timeFromMillis = currentTimeMillis - timeRange;
     const timeToMillis = currentTimeMillis;
 
-    const show_stat_message = () => {
-      invoke('is_tary_window_active').then(
-        (is_active) => {
-          if (is_active) {
-            message.open({
-              type: 'success',
-              content: 'Statisctics updated',
-              duration: 1,
-            });
-          }
-        }
-      )
-    }
-
     const fetchStatisctic = async (device: Device | null) => {
       try {
         trace(`Selected device is ${selectedDevice?.name}`)
@@ -51,7 +37,6 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
           error(result.message);
           message.error(`Error to get data from server: ${result.message}`);
         } else {
-          show_stat_message()
           const data = result as GeneralStat;
           setStat(data)
           trace('Statisctics updated');
