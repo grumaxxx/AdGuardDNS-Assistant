@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Form, Input, Button, Card, Spin, message } from 'antd';
+import { useState } from 'react';
+import { Form, Card, Spin } from 'antd';
 import './Auth.css';
 import logo from './../logo.svg';
 import { useAuthorization } from '../../hooks/UseAuth';
 import { TwoFactorForm } from './TwoFactorForm';
 import { AuthForm } from './AuthForm';
-import { trace, error } from 'tauri-plugin-log-api';
-import { invoke } from '@tauri-apps/api/tauri';
+import { trace } from 'tauri-plugin-log-api';
 
 const Auth: React.FC<{ setToken: (token: string) => void }> = ({
   setToken,

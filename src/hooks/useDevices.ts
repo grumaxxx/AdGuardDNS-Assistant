@@ -4,7 +4,7 @@ import { Device } from "../types";
 import { message } from "antd";
 import { AxiosError } from "axios";
 import testDevices from "../components/Tray/TestDevices";
-import { trace, error } from "tauri-plugin-log-api";
+import { trace } from "tauri-plugin-log-api";
 
 export const useDevices = (token: string, refreshKey: number) => {
   const [devices, setDevices] = useState<Device[]>([]);

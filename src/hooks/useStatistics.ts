@@ -2,7 +2,7 @@ import { message } from "antd";
 import { useState, useEffect } from "react";
 import { invoke } from '@tauri-apps/api/tauri'
 import { getGeneralStatistics } from "../components/Api";
-import { Device, CategoryTypeStat, GeneralStat } from "../types";
+import { Device, GeneralStat } from "../types";
 import { trace, error } from "tauri-plugin-log-api";
 
 

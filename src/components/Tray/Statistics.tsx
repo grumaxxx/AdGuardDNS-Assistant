@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, Col, Spin, Row, Statistic, Segmented } from 'antd';
+import { Segmented } from 'antd';
 import { useState } from 'react';
 import { useStatistics } from '../../hooks/useStatistics';
 import { SegmentedValue } from 'antd/es/segmented';

@@ -3,7 +3,7 @@ import { Authorization } from "../components/Api";
 import { AccessToken, TokenServerError } from "../types";
 import { message } from "antd";
 import { AxiosError } from "axios";
-import { trace, error } from "tauri-plugin-log-api";
+import { trace } from "tauri-plugin-log-api";
 
 export const useAuthorization = () => {
   const [loading, setLoading] = useState(false);
