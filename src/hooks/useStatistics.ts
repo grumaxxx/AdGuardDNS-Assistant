@@ -33,17 +33,13 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
       try {
         trace(`Selected device is ${selectedDevice?.name}`)
         const result = await getGeneralStatistics(device ? device.id : null, token, timeFromMillis, timeToMillis);
-        if (result instanceof Error) {
-          error(result.message);
-          message.error(`Error to get data from server: ${result.message}`);
-        } else {
-          const data = result as GeneralStat;
-          setStat(data)
-          trace('Statisctics updated');
-        }
+        const data = result as GeneralStat;
+        setStat(data)
+        trace('Statisctics updated');
       } catch (e) {
         if (e instanceof Error) {
           error(e.message);
+          message.error(`Error to get data from server: ${e.message}`);
         }
       } finally {
         invoke('close_splashscreen');

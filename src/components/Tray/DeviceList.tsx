@@ -3,7 +3,6 @@ import { Device } from '../../types';
 import { deviceIcons } from './DeviceIcons';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
-
 interface DeviceListProps {
   devices: Device[];
   handleItemClick: (device: Device, index: number) => void;
@@ -17,7 +16,7 @@ export const DeviceList: React.FC<DeviceListProps> = ({
   handleItemClick,
   selectedItem,
   handleSwitchChange,
-  loading
+  loading,
 }) => {
   return (
     <List

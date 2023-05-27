@@ -1,7 +1,7 @@
 import axios from "axios"
 import { QueryLogServerResponse, StatsItem, AccessToken, Device, GeneralStat, DeviceStat, CombinedOverallStat, CategoryTypeStat } from "../types";
 
-export const Authorization = async (username: string, password: string, mfa_token: string | null): Promise<AccessToken | Error> => {
+export const Authorization = async (username: string, password: string, mfa_token: string | null): Promise<AccessToken> => {
   try {
     const result = await axios.post(
       'https://api.adguard-dns.io/oapi/v1/oauth_token',
@@ -18,11 +18,11 @@ export const Authorization = async (username: string, password: string, mfa_toke
     );
     return result.data as AccessToken; 
   } catch (error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
 
-export const RefreshToken = async (refresh_token: string): Promise<AccessToken | Error> => {
+export const RefreshToken = async (refresh_token: string): Promise<AccessToken> => {
   try {
     const result = await axios.post(
       'https://api.adguard-dns.io/oapi/v1/oauth_token',
@@ -37,11 +37,11 @@ export const RefreshToken = async (refresh_token: string): Promise<AccessToken |
     );
     return result.data as AccessToken; 
   } catch (error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
 
-export const getStatistics = async (token: string, timeFromMillis: number, timeToMillis: number): Promise<StatsItem[] | Error> => {
+export const getStatistics = async (token: string, timeFromMillis: number, timeToMillis: number): Promise<StatsItem[]> => {
   try {
     const response = await axios.get(
     'https://api.adguard-dns.io/oapi/v1/stats/time',
@@ -59,13 +59,13 @@ export const getStatistics = async (token: string, timeFromMillis: number, timeT
       const data = response.data.stats as StatsItem[];
       return data;
     }
-    return new Error(response.data.message);
+    throw new Error(response.data.message);
   } catch(error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
 
-export const getGeneralStatistics = async (deviceID: string | null, token: string, timeFromMillis: number, timeToMillis: number): Promise<GeneralStat | Error> => {
+export const getGeneralStatistics = async (deviceID: string | null, token: string, timeFromMillis: number, timeToMillis: number): Promise<GeneralStat> => {
   try {
     const response = await axios.get(
     'https://api.adguard-dns.io/api/v1/stats/general',
@@ -86,13 +86,13 @@ export const getGeneralStatistics = async (deviceID: string | null, token: strin
       const result: GeneralStat = {categories: categories, overall: overall};
       return result;
     }
-    return new Error(response.data.message);
+    throw new Error(response.data.message);
   } catch(error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
 
-export const getQueryLog = async (token: string, timeFromMillis: number, timeToMillis: number): Promise<QueryLogServerResponse | Error> => {
+export const getQueryLog = async (token: string, timeFromMillis: number, timeToMillis: number): Promise<QueryLogServerResponse> => {
   try {
     const response = await axios.get(
       'https://api.adguard-dns.io/oapi/v1/query_log',
@@ -112,13 +112,13 @@ export const getQueryLog = async (token: string, timeFromMillis: number, timeToM
       const result = response.data as QueryLogServerResponse;
       return result;
     }
-    return new Error("No 'items' in the response data.");
+    throw new Error("No 'items' in the response data.");
   } catch (error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
 
-export const getDevices = async (token: string): Promise<Device[] | Error> => {
+export const getDevices = async (token: string): Promise<Device[]> => {
   try {
     const response = await axios.get('https://api.adguard-dns.io/oapi/v1/devices',
     {
@@ -128,13 +128,13 @@ export const getDevices = async (token: string): Promise<Device[] | Error> => {
     })
     return response.data as Device[];
   } catch (error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
 
 export const turnOffDevice = async (deviceID: string, token: string) => {
   try {
-    const response = await axios.put(`https://api.adguard-dns.io/oapi/v1/devices/${deviceID}/settings`, 
+    await axios.put(`https://api.adguard-dns.io/oapi/v1/devices/${deviceID}/settings`, 
     {
       protection_enabled: false
     },
@@ -144,13 +144,13 @@ export const turnOffDevice = async (deviceID: string, token: string) => {
       },
     })
   } catch (error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }
 
 export const turnOnDevice = async (deviceID: string, token: string) => {
   try {
-    const response = await axios.put(`https://api.adguard-dns.io/oapi/v1/devices/${deviceID}/settings`, 
+    await axios.put(`https://api.adguard-dns.io/oapi/v1/devices/${deviceID}/settings`, 
     {
       protection_enabled: true
     },
@@ -160,6 +160,6 @@ export const turnOnDevice = async (deviceID: string, token: string) => {
       },
     })
   } catch (error) {
-    return error instanceof Error ? error : new Error("An unknown error occurred.");
+    throw error instanceof Error ? error : new Error("An unknown error occurred.");
   }
 }

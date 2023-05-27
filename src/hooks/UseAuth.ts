@@ -12,22 +12,18 @@ export const useAuthorization = () => {
     setLoading(true);
     try {
       const result = await Authorization(username, password, token);
-      if ('access_token' in result) {
-        const data = result as AccessToken;
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('refresh_token', data.refresh_token);
+      const data = result as AccessToken;
+      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('refresh_token', data.refresh_token);
 
-        const expiresIn = data.expires_in;
-        const currentTime = Math.floor(Date.now() / 1000);
-        const expireAt = currentTime + expiresIn;
+      const expiresIn = data.expires_in;
+      const currentTime = Math.floor(Date.now() / 1000);
+      const expireAt = currentTime + expiresIn;
 
-        localStorage.setItem('token_expires_at', expireAt.toString());
-        
-        setLoading(false);
-        return data.access_token;
-      } else {
-        throw result as AxiosError;
-      }
+      localStorage.setItem('token_expires_at', expireAt.toString());
+      
+      setLoading(false);
+      return data.access_token;
     } catch (error) {
       setLoading(false);
       if (error && (error as AxiosError).response) {

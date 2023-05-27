@@ -8,6 +8,7 @@ import { trace } from 'tauri-plugin-log-api';
 import './Tray.css';
 import { SafetyOutlined } from '@ant-design/icons';
 import { DeviceList } from './DeviceList';
+import { AxiosError } from 'axios';
 
 interface DevicesProps {
   refreshKey: number;
@@ -23,13 +24,13 @@ const Devices: React.FC<DevicesProps> = ({
   const { devices, setDevices, loading } = useDevices(token, refreshKey);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
 
-  const handleSwitchChange = (device: Device) => {
+  const handleSwitchChange = async (device: Device) => {
     trace(
       `Try to change device protection: ${device.id}, current state: ${device.settings.protection_enabled}`
     );
     if (device.settings.protection_enabled) {
       try {
-        turnOffDevice(device.id, token);
+        await turnOffDevice(device.id, token);
         const newDevices = [...devices];
         const deviceIndex = devices.findIndex(d => d.id === device.id);
         newDevices[deviceIndex].settings.protection_enabled = false;
@@ -41,11 +42,15 @@ const Devices: React.FC<DevicesProps> = ({
           icon: <SafetyOutlined />,
         });
       } catch (error) {
-        message.error('Failed to turn off device');
+        if (error instanceof AxiosError) {
+          message.error(`Failed to turn off device: ${error.message}`);
+        } else {
+          message.error('Failed to turn off device');
+        }
       }
     } else {
       try {
-        turnOnDevice(device.id, token);
+        await turnOnDevice(device.id, token);
         const newDevices = [...devices];
         const deviceIndex = devices.findIndex(d => d.id === device.id);
         newDevices[deviceIndex].settings.protection_enabled = true;
@@ -57,7 +62,11 @@ const Devices: React.FC<DevicesProps> = ({
           icon: <SafetyOutlined />,
         });
       } catch (error) {
-        message.error('Failed to turn on device');
+        if (error instanceof AxiosError) {
+          message.error(`Failed to turn on device: ${error.message}`);
+        } else {
+          message.error('Failed to turn on device');
+        }
       }
     }
   };

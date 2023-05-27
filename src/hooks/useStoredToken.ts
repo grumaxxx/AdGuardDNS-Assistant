@@ -11,10 +11,7 @@ const useStoredToken = (setToken: (token: string | null) => void) => {
     const refreshToken = localStorage.getItem('refresh_token');
     if (refreshToken) {
       try {
-        const response: AccessToken | Error = await RefreshToken(refreshToken);
-        if (response instanceof Error) {
-          throw response;
-        }
+        const response: AccessToken = await RefreshToken(refreshToken);
         localStorage.setItem('access_token', response.access_token);
         localStorage.setItem('refresh_token', response.refresh_token);
         localStorage.setItem('token_expires_at', (Date.now() / 1000 + response.expires_in).toString());

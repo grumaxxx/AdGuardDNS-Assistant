@@ -19,10 +19,6 @@ export const useDevices = (token: string, refreshKey: number) => {
         const fetch = getDevices(token);
 
         const [result] = await Promise.all([fetch, delay]);
-        
-        if (result instanceof Error) {
-          throw result;
-        }
 
         trace('Devices fetched');
         setDevices(result);
