@@ -69,7 +69,7 @@ const Tray: React.FC = () => {
     }
     setRefreshKey((oldKey: number) => oldKey + 1);
     trace('Refresh button clicked');
-    setTimeout(() => setSpinning(false), 300);
+    setTimeout(() => setSpinning(false), 500);
     intervalId.current = setInterval(() => {
       setRefreshKey((oldKey: number) => oldKey + 1);
     }, updateInterval);

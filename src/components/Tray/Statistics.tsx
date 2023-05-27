@@ -54,7 +54,11 @@ const Statistics: React.FC<StatisticsProps> = ({
         className="site-layout-content"
         style={{ marginTop: 10, marginBottom: 20, minHeight: '140px' }}
       >
-        {loading ? <StatisticSpin /> : <StatisticCard overall={stat.overall} loading={loading}/>}
+        {loading ? (
+          <StatisticSpin />
+        ) : (
+          <StatisticCard overall={stat.overall} loading={loading} />
+        )}
       </div>
     </div>
   );

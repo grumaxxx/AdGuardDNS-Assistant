@@ -8,27 +8,36 @@ import { trace } from "tauri-plugin-log-api";
 
 export const useDevices = (token: string, refreshKey: number) => {
   const [devices, setDevices] = useState<Device[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true)
 
-  const fetchDevices = async () => {
-    try {
-         const result = await getDevices(token);
-      if (result instanceof Error) {
-        throw result;
+    const fetchDevices = async () => {
+      try {
+        const delay = new Promise(resolve => setTimeout(resolve, 500));
+        const fetch = getDevices(token);
+
+        const [result] = await Promise.all([fetch, delay]);
+        
+        if (result instanceof Error) {
+          throw result;
+        }
+
+        trace('Devices fetched');
+        setDevices(result);
+      } catch (error) {
+        message.error(
+          `Failed to fetch devices: ${(error as AxiosError).message}`
+        );
+      } finally {
+        setLoading(false)
       }
-      trace('Devices fetched');
-      setDevices(result);
-    } catch (error) {
-      message.error(
-        `Failed to fetch devices: ${(error as AxiosError).message}`
-      );
     }
-  }
 
-  fetchDevices()
+    fetchDevices()
 
   }, [token, refreshKey])
 
-  return { devices, setDevices };
+  return { devices, setDevices, loading };
 };

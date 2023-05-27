@@ -19,7 +19,10 @@ function formatNumber(num: number): string {
   }
 }
 
-export const StatisticCard: React.FC<StatisticCardProps> = ({ overall, loading }) => {
+export const StatisticCard: React.FC<StatisticCardProps> = ({
+  overall,
+  loading,
+}) => {
   return (
     <Row gutter={16}>
       <Col span={12}>
@@ -63,14 +66,14 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({ overall, loading }
 export const StatisticSpin = () => {
   return (
     <div
-    style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '140px',
-    }}
-  >
-    <Spin tip="Loading" size="large" />
-  </div>
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '140px',
+      }}
+    >
+      <Spin tip="Loading" size="large" />
+    </div>
   );
-}
+};
