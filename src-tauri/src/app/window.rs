@@ -29,7 +29,6 @@ pub fn create_splash_screen(app: &AppHandle<Wry>) {
       .unwrap();
     let _ = window.move_window(Position::TrayCenter);
     let _ = window.show();
-    let _ = window.set_focus();
 }
 
 pub fn create_query_log_window(app: &AppHandle<Wry>) {
