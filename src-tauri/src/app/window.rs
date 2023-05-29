@@ -4,16 +4,13 @@ use crate::AppConf;
 
 pub fn create_tray_window(app: &AppHandle<Wry>) {
   let app_conf = AppConf::read();
-  let mut builder = WindowBuilder::new(app, "tray", WindowUrl::App("index.html?type=tray".into()))
+  let builder = WindowBuilder::new(app, "tray_win", WindowUrl::App("index.html?type=tray".into()))
+      .decorations(false)
       .inner_size(app_conf.tray_width, app_conf.tray_height)
       .always_on_top(true)
       .skip_taskbar(true)
       .min_inner_size(app_conf.tray_min_width, app_conf.tray_min_height)
       .resizable(false);
-  #[cfg(target_os = "macos")]
-  {
-    builder = builder.decorations(false);
-  }
   let window = builder.build().unwrap();
   window.move_window(Position::TrayCenter).unwrap();
 }

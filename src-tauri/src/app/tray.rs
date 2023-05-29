@@ -13,7 +13,7 @@ pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
     match event {
         SystemTrayEvent::LeftClick { .. } => {
             on_tray_event(app, &event);
-            match app.get_window("tray") {
+            match app.get_window("tray_win") {
                 None => {
                     window::create_tray_window(app);
                     window::create_splash_screen(app);
@@ -42,11 +42,11 @@ pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
                     window::create_settings_window(app);
                 },
                 "query_log" => {
-                    let _ = app.get_window("tray").unwrap().hide();
+                    let _ = app.get_window("tray_win").unwrap().hide();
                     window::create_query_log_window(app);
                 },
                 "dashboard" => {
-                    let _ = app.get_window("tray").unwrap().hide();
+                    let _ = app.get_window("tray_win").unwrap().hide();
                     match app.get_window("dashboard")
                     {
                         None => {

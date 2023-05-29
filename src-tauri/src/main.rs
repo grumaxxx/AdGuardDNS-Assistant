@@ -38,7 +38,7 @@ async fn main() {
     }
     trace!("Create tray window");
     let system_tray = SystemTray::new().with_menu(tray::system_tray_menu());
-    let mut app = tauri::Builder::default()
+    let app = tauri::Builder::default()
         .plugin(log.build())
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_autostart::init(
@@ -52,7 +52,7 @@ async fn main() {
         .system_tray(system_tray)
         .on_system_tray_event(tray::tray_handler)
         .invoke_handler(tauri::generate_handler![
-            cmd::is_tary_window_active,
+            cmd::is_tray_window_active,
             cmd::close_splashscreen
         ])
         .build(tauri::generate_context!())

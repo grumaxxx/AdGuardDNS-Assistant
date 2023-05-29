@@ -43,6 +43,6 @@
     "postcss": "^8.4.23",
     "prettier": "^2.8.8",
     "typescript": "*",
-    "vite": "^4.2.1"
+    "vite": "^4.3.9"
   }
 }
