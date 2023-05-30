@@ -1,7 +1,8 @@
 import { List, Switch } from 'antd';
 import { Device } from '../../types';
-import { deviceIcons } from './DeviceIcons';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { createDeviceIcons } from './DeviceIcons';
+import { useContext } from 'react';
+import { ThemeContext, ThemeInterface } from '../../Theme';
 
 interface DeviceListProps {
   devices: Device[];
@@ -18,6 +19,9 @@ export const DeviceList: React.FC<DeviceListProps> = ({
   handleSwitchChange,
   loading,
 }) => {
+  const theme = useContext<ThemeInterface>(ThemeContext);
+  const deviceIcons = createDeviceIcons(theme.isDark);
+
   return (
     <List
       itemLayout="horizontal"

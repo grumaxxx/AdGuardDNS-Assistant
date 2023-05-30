@@ -9,6 +9,11 @@ struct LogOut {
   flag: bool,
 }
 
+#[derive(Clone, serde::Serialize)]
+struct SwitchTheme {
+    flag: bool,
+}
+
 pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
     match event {
         SystemTrayEvent::LeftClick { .. } => {
@@ -41,6 +46,9 @@ pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
                 "settings" => {
                     window::create_settings_window(app);
                 },
+                "switch_theme" => {
+                    app.emit_all("switch_theme", SwitchTheme { flag: true }).unwrap();
+                },
                 "query_log" => {
                     let _ = app.get_window("tray_win").unwrap().hide();
                     window::create_query_log_window(app);
@@ -71,6 +79,8 @@ pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
 pub fn system_tray_menu() -> SystemTrayMenu {
   SystemTrayMenu::new()
       .add_item(CustomMenuItem::new("dashboard", "Open Full Dashboard"))
+      .add_native_item(SystemTrayMenuItem::Separator)
+      .add_item(CustomMenuItem::new("switch_theme".to_string(), "Switch Theme"))
       .add_native_item(SystemTrayMenuItem::Separator)
       .add_item(CustomMenuItem::new("logout".to_string(), "Log Out"))
       .add_item(CustomMenuItem::new("exit".to_string(), "Exit"))

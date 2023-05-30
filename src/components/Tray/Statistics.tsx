@@ -5,6 +5,8 @@ import { useStatistics } from '../../hooks/useStatistics';
 import { SegmentedValue } from 'antd/es/segmented';
 import { Device } from '../../types';
 import { StatisticCard, StatisticSpin } from './StatisticCard';
+import { useContext } from 'react';
+import { ThemeContext, ThemeInterface } from '../../Theme';
 
 interface StatisticsProps {
   refreshKey: number;
@@ -23,6 +25,7 @@ const Statistics: React.FC<StatisticsProps> = ({
   token,
   selectedDevice,
 }) => {
+  const theme = useContext<ThemeInterface>(ThemeContext);
   const [timeRange, setTimerange] = useState<number>(
     TIME_SEGMENTS['Last hour']
   );
@@ -43,7 +46,7 @@ const Statistics: React.FC<StatisticsProps> = ({
         style={{
           marginTop: 10,
           marginBottom: 10,
-          backgroundColor: '#f5f5f5',
+          backgroundColor: theme.statiscticCardColor,
           borderRadius: '8px',
         }}
         block

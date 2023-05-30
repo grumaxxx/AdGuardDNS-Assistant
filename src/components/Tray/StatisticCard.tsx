@@ -1,6 +1,8 @@
 import { Card, Col, Row, Statistic, Spin, Skeleton } from 'antd';
 import { StopOutlined, SwapOutlined } from '@ant-design/icons';
 import { CombinedOverallStat } from '../../types';
+import { useContext } from 'react';
+import { ThemeContext, ThemeInterface } from '../../Theme';
 
 interface StatisticCardProps {
   overall: CombinedOverallStat;
@@ -23,12 +25,13 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
   overall,
   loading,
 }) => {
+  const theme = useContext<ThemeInterface>(ThemeContext);
   return (
     <Row gutter={16}>
       <Col span={12}>
         <Card
           style={{
-            backgroundColor: '#f5f5f5',
+            backgroundColor: theme.statiscticCardColor,
             borderRadius: '15px',
           }}
         >
@@ -45,7 +48,7 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
       <Col span={12}>
         <Card
           style={{
-            backgroundColor: '#f5f5f5',
+            backgroundColor: theme.statiscticCardColor,
             borderRadius: '15px',
           }}
         >

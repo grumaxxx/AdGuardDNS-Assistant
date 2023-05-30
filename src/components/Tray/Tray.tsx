@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
@@ -12,8 +12,10 @@ const { Header, Content } = Layout;
 import useStoredToken from '../../hooks/useStoredToken';
 import { Device } from '../../types';
 import { trace, error } from 'tauri-plugin-log-api';
+import { ThemeContext, ThemeInterface } from '../../Theme';
 
 const Tray: React.FC = () => {
+  const theme = useContext<ThemeInterface>(ThemeContext);
   const [refreshKey, setRefreshKey] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -80,7 +82,7 @@ const Tray: React.FC = () => {
     <Layout
       className="layout"
       style={{
-        backgroundColor: 'white',
+        backgroundColor: theme.bodyBackground,
         height: '100vh',
         width: '100vw',
         display: 'flex',
@@ -95,7 +97,7 @@ const Tray: React.FC = () => {
       >
         <Row justify="space-between" align="middle">
           <Col span={12}>
-            <img src={logo} alt="Logo" style={{ verticalAlign: 'middle' }} />
+            <img src={theme.isDark ? dark_logo : logo} alt="Logo" style={{ verticalAlign: 'middle' }} />
           </Col>
           <Col span={12} style={{ textAlign: 'right' }}>
             <Button

@@ -37,7 +37,11 @@ async fn main() {
         });
     }
     trace!("Create tray window");
-    let system_tray = SystemTray::new().with_menu(tray::system_tray_menu());
+    let mut system_tray = SystemTray::new().with_menu(tray::system_tray_menu());
+    #[cfg(target_os = "macos")] 
+    {
+        system_tray = system_tray.with_icon(tauri::Icon::Raw(include_bytes!("../icons/tray_icon.png").to_vec()));
+    }
     let mut app = tauri::Builder::default()
         .plugin(log.build())
         .plugin(tauri_plugin_positioner::init())

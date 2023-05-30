@@ -8,28 +8,30 @@ import routerLogo from './icons/routers.svg';
 import smartTvLogo from './icons/smart_tv.svg';
 import unknownLogo from './icons/unknown.svg';
 
-const createDeviceIcon = (logo: string) => (
-  <img
-    src={logo}
-    alt="Logo"
-    style={{
-      verticalAlign: 'middle',
-      alignItems: 'center',
-      width: '24px',
-      height: '24px',
-      // filter: 'invert(1)' dark-mode
-    }}
-  />
-);
+export const createDeviceIcons = (isDark: boolean) => {
+  const createDeviceIcon = (logo: string) => (
+    <img
+      src={logo}
+      alt="Logo"
+      style={{
+        verticalAlign: 'middle',
+        alignItems: 'center',
+        width: '24px',
+        height: '24px',
+        filter: isDark ? 'invert(1)' : 'none',
+      }}
+    />
+  );
 
-export const deviceIcons = {
-  WINDOWS: createDeviceIcon(winLogo),
-  ANDROID: createDeviceIcon(androidLogo),
-  MAC: createDeviceIcon(macLogo),
-  IOS: createDeviceIcon(iosLogo),
-  LINUX: createDeviceIcon(linuxLogo),
-  ROUTER: createDeviceIcon(routerLogo),
-  SMART_TV: createDeviceIcon(smartTvLogo),
-  GAME_CONSOLE: createDeviceIcon(consoleLogo),
-  UNKNOWN: createDeviceIcon(unknownLogo),
+  return {
+    WINDOWS: createDeviceIcon(winLogo),
+    ANDROID: createDeviceIcon(androidLogo),
+    MAC: createDeviceIcon(macLogo),
+    IOS: createDeviceIcon(iosLogo),
+    LINUX: createDeviceIcon(linuxLogo),
+    ROUTER: createDeviceIcon(routerLogo),
+    SMART_TV: createDeviceIcon(smartTvLogo),
+    GAME_CONSOLE: createDeviceIcon(consoleLogo),
+    UNKNOWN: createDeviceIcon(unknownLogo),
+  };
 };
