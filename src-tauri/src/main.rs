@@ -38,7 +38,7 @@ async fn main() {
     }
     trace!("Create tray window");
     let system_tray = SystemTray::new().with_menu(tray::system_tray_menu());
-    let app = tauri::Builder::default()
+    let mut app = tauri::Builder::default()
         .plugin(log.build())
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_autostart::init(

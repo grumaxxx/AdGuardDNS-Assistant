@@ -10,6 +10,7 @@ pub fn create_tray_window(app: &AppHandle<Wry>) {
       .always_on_top(true)
       .skip_taskbar(true)
       .min_inner_size(app_conf.tray_min_width, app_conf.tray_min_height)
+      .theme(Some(tauri::Theme::Dark))
       .resizable(false);
   let window = builder.build().unwrap();
   window.move_window(Position::TrayCenter).unwrap();

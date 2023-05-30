@@ -17,6 +17,7 @@ const createDeviceIcon = (logo: string) => (
       alignItems: 'center',
       width: '24px',
       height: '24px',
+      // filter: 'invert(1)' dark-mode
     }}
   />
 );

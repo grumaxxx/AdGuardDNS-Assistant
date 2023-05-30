@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import Devices from './Devices';
 import Statistics from './Statistics';
 import logo from './../logo.svg';
-import { Row, Col, Button, Layout } from 'antd';
+import dark_logo from './../logo_dark.svg';
+import { Row, Col, Button, Layout, theme } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import Auth from '../Auth/Auth';
 import './Tray.css';
@@ -74,7 +75,7 @@ const Tray: React.FC = () => {
       setRefreshKey((oldKey: number) => oldKey + 1);
     }, updateInterval);
   };
-
+  
   return (
     <Layout
       className="layout"

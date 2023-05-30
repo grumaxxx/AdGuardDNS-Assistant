@@ -1,12 +1,21 @@
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { ConfigProvider, message } from 'antd';
-import { useEffect } from 'react';
+import { ConfigProvider, message, theme } from 'antd';
+import { useEffect, useState } from 'react';
 import './index.css';
 import Tray from './components/Tray/Tray';
 import SplashScreen from './components/Splashscreen/Splashscreen';
 import ErrorBoundary from './components/ErrorBoundary';
 
+interface ThemeInterface {
+  bodyBackground: string;
+}
+
+const lightTheme: ThemeInterface = { bodyBackground: '#ffffff' };
+const darkTheme: ThemeInterface = { bodyBackground: '#121212' };
+
 const App = () => {
+  const [isDark, setIsDark] = useState<boolean>(true);
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -25,9 +34,11 @@ const App = () => {
   return (
     <ConfigProvider
       theme={{
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
           fontFamily: `'Rubik', sans-serif`,
           colorPrimary: '#3c81f6',
+          colorBgBase: isDark ? darkTheme.bodyBackground : darkTheme.bodyBackground,
         },
       }}
     >
