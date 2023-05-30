@@ -8,6 +8,7 @@ pub fn create_tray_window(app: &AppHandle<Wry>) {
       .decorations(false)
       .inner_size(app_conf.tray_width, app_conf.tray_height)
       .always_on_top(true)
+      .visible(false)
       .skip_taskbar(true)
       .min_inner_size(app_conf.tray_min_width, app_conf.tray_min_height)
       .resizable(false);
@@ -22,6 +23,7 @@ pub fn create_splash_screen(app: &AppHandle<Wry>) {
       .always_on_top(true)
       .resizable(false)
       .decorations(false)
+      .visible(false)
       .build()
       .unwrap();
     let _ = window.move_window(Position::TrayCenter);
