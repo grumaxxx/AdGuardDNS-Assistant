@@ -1,7 +1,6 @@
 import { List, Switch } from 'antd';
 import { Device } from '../../types';
 import { deviceIcons } from './DeviceIcons';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 interface DeviceListProps {
   devices: Device[];
@@ -26,22 +25,11 @@ export const DeviceList: React.FC<DeviceListProps> = ({
         <List.Item
           className={selectedItem === index ? 'selected' : ''}
           onClick={() => handleItemClick(device, index)}
-          style={{ cursor: 'pointer' }}
         >
-          <div
-            style={{ display: 'flex', alignItems: 'center', marginLeft: 10 }}
-          >
+          <div className="device-list">
             {deviceIcons[device.device_type as keyof typeof deviceIcons]}
-            <div
-              style={{
-                fontSize: '16px',
-                fontWeight: 500,
-                marginLeft: '20px',
-              }}
-            >
-              {device.name.length > 20
-                ? `${device.name.substring(0, 18)}...`
-                : device.name}
+            <div className="device-list-item">
+              {device.name.length > 20 ? `${device.name.substring(0, 18)}...` : device.name}
             </div>
           </div>
           <span
@@ -52,7 +40,7 @@ export const DeviceList: React.FC<DeviceListProps> = ({
             <Switch
               checked={device.settings.protection_enabled}
               onChange={() => handleSwitchChange(device)}
-              style={{ marginRight: 10 }}
+              className="device-list-switch"
               loading={loading}
             />
           </span>
@@ -61,3 +49,4 @@ export const DeviceList: React.FC<DeviceListProps> = ({
     />
   );
 };
+

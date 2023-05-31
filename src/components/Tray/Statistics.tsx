@@ -40,20 +40,12 @@ const Statistics: React.FC<StatisticsProps> = ({
   return (
     <div>
       <Segmented
-        style={{
-          marginTop: 10,
-          marginBottom: 10,
-          backgroundColor: '#f5f5f5',
-          borderRadius: '8px',
-        }}
+        className="segmented-style"
         block
         options={Object.keys(TIME_SEGMENTS)}
         onChange={handleSegmentChange}
       />
-      <div
-        className="site-layout-content"
-        style={{ marginTop: 10, marginBottom: 20, minHeight: '140px' }}
-      >
+      <div className='statistics'>
         {loading ? (
           <StatisticSpin />
         ) : (
