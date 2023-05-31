@@ -53,16 +53,14 @@ const Tray: React.FC = () => {
   }
 
   return (
-    <Layout
-      className="layout"
-    >
+    <Layout className="layout">
       <TrayHeader
         setRefreshKey={setRefreshKey}
         intervalId={intervalId}
         updateInterval={updateInterval}
       />
       <Content className="content">
-        <div className='content-div'>
+        <div className="content-div">
           <Devices
             refreshKey={refreshKey}
             token={token}

@@ -45,7 +45,7 @@ const Statistics: React.FC<StatisticsProps> = ({
         options={Object.keys(TIME_SEGMENTS)}
         onChange={handleSegmentChange}
       />
-      <div className='statistics'>
+      <div className="statistics">
         {loading ? (
           <StatisticSpin />
         ) : (

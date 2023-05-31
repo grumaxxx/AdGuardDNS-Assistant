@@ -52,10 +52,7 @@ const Auth: React.FC<{ setToken: (token: string) => void }> = ({
 
   return (
     <Spin spinning={loading}>
-      <Card
-        className="login-card"
-        bordered={false}
-      >
+      <Card className="login-card" bordered={false}>
         <img
           src={logo}
           alt="Logo"

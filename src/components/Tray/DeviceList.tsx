@@ -23,13 +23,15 @@ export const DeviceList: React.FC<DeviceListProps> = ({
       dataSource={devices}
       renderItem={(device: Device, index: number) => (
         <List.Item
-          className={selectedItem === index ? 'selected' : ''}
+          className={selectedItem === index ? 'selected' : 'list-item'}
           onClick={() => handleItemClick(device, index)}
         >
           <div className="device-list">
             {deviceIcons[device.device_type as keyof typeof deviceIcons]}
             <div className="device-list-item">
-              {device.name.length > 20 ? `${device.name.substring(0, 18)}...` : device.name}
+              {device.name.length > 20
+                ? `${device.name.substring(0, 18)}...`
+                : device.name}
             </div>
           </div>
           <span
@@ -49,4 +51,3 @@ export const DeviceList: React.FC<DeviceListProps> = ({
     />
   );
 };
-

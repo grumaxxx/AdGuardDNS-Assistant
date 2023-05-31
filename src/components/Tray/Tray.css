@@ -10,6 +10,7 @@
 .selected {
   background-color: #e3edfc;
   border-radius: 12px;
+  cursor: pointer;
 }
 
 .layout {
