@@ -55,14 +55,6 @@ const Auth: React.FC<{ setToken: (token: string) => void }> = ({
       <Card
         className="login-card"
         bordered={false}
-        style={{
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
       >
         <img
           src={logo}

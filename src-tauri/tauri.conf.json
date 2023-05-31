@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "AdGuard DNS Assistant",
-    "version": "0.1.6"
+    "version": "0.2.0"
   },
   "tauri": {
     "allowlist": {
@@ -42,7 +42,7 @@
       "active": false
     },
     "systemTray": {
-      "iconPath": "icons/tray_icon.png",
+      "iconPath": "icons/icon.png",
       "iconAsTemplate": true,
       "menuOnLeftClick": false
     }

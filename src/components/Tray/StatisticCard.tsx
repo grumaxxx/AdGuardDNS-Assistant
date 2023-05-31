@@ -27,7 +27,7 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
 }) => {
   const theme = useContext<ThemeInterface>(ThemeContext);
   return (
-    <Row gutter={16}>
+    <Row gutter={10}>
       <Col span={12}>
         <Card
           style={{
