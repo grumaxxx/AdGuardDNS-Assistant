@@ -45,6 +45,7 @@ pub fn create_dashboard_window(app: &AppHandle<Wry>) {
   let window = WindowBuilder::new(app, "dashboard", WindowUrl::External("https://adguard-dns.io/en/dashboard/".parse().unwrap()))
       .inner_size(app_conf.dashboard_width, app_conf.dashboard_height)
       .title("AdGuard DNS Dashboard")
+      .resizable(true)
       .build()
       .unwrap();
   let _ = window.move_window(Position::Center);

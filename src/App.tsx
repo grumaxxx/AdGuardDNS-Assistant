@@ -15,6 +15,18 @@ const App = () => {
   });
 
   useEffect(() => {
+    const preventContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener('contextmenu', preventContextMenu);
+
+    return () => {
+      window.removeEventListener('contextmenu', preventContextMenu);
+    };
+  }, []);
+
+  useEffect(() => {
     if (location.search === '?type=tray') {
       navigate('/tray');
     } else if (location.search === '?type=splash_screen') {
