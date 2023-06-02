@@ -10,6 +10,7 @@ pub fn create_tray_window(app: &AppHandle<Wry>) {
       .always_on_top(true)
       .visible(false)
       .skip_taskbar(true)
+      .accept_first_mouse(true)
       .min_inner_size(app_conf.tray_min_width, app_conf.tray_min_height)
       .resizable(false);
   let window = builder.build().unwrap();
@@ -37,7 +38,6 @@ pub fn create_query_log_window(app: &AppHandle<Wry>) {
       .build()
       .unwrap();
   let _ = window.move_window(Position::Center);
-  let _ = window.set_focus();
 }
 
 pub fn create_dashboard_window(app: &AppHandle<Wry>) {
@@ -46,10 +46,10 @@ pub fn create_dashboard_window(app: &AppHandle<Wry>) {
       .inner_size(app_conf.dashboard_width, app_conf.dashboard_height)
       .title("AdGuard DNS Dashboard")
       .resizable(true)
+      .accept_first_mouse(true)
       .build()
       .unwrap();
   let _ = window.move_window(Position::Center);
-  let _ = window.set_focus();
 }
 
 pub fn create_settings_window(app: &AppHandle<Wry>) {

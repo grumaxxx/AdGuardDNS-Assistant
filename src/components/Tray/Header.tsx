@@ -1,7 +1,7 @@
 import { ReloadOutlined } from '@ant-design/icons';
 import { Button, Col, Row } from 'antd';
 import { Header } from 'antd/es/layout/layout';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import logo from './../logo.svg';
 import { trace } from 'tauri-plugin-log-api';
 
@@ -47,13 +47,10 @@ export const TrayHeader: React.FC<TrayHeaderProps> = ({
             type="text"
             icon={<ReloadOutlined className={spinning ? 'spinning' : ''} />}
             onClick={handleClick}
+            style={{ outline: 'none' }}
           />
         </Col>
       </Row>
     </Header>
   );
 };
-
-function setSpinning(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}

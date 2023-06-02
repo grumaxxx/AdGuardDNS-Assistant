@@ -23,6 +23,5 @@ pub async fn close_splashscreen(window: Window) {
     splashscreen.close().unwrap();
     let tray = window.get_window("tray_win").unwrap();
     let _ = tray.show();
-    let _ = tray.set_focus();
   }
 }

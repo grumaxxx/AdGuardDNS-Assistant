@@ -27,7 +27,6 @@ pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
                         false => {
                             let _ = label.move_window(Position::TrayCenter);
                             let _ = label.show();
-                            let _ = label.set_focus();
                         }
                     }
                 }
@@ -52,8 +51,8 @@ pub fn tray_handler(app: &AppHandle, event: SystemTrayEvent) {
                         None => {
                             window::create_dashboard_window(app);
                         },
-                        Some(_dashboard) => {
-                            unimplemented!();
+                        Some(dashboard) => {
+                            dashboard.show().unwrap();
                         }
                     }
                 }
