@@ -4,6 +4,7 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { getGeneralStatistics } from "../components/Api";
 import { Device, GeneralStat } from "../types";
 import { trace, error } from "tauri-plugin-log-api";
+import { messageIfVisible } from "../Utils";
 
 
 export const useStatistics = (selectedDevice: Device | null,timeRange: number, token: string, refreshKey: number) => {
@@ -39,7 +40,7 @@ export const useStatistics = (selectedDevice: Device | null,timeRange: number, t
       } catch (e) {
         if (e instanceof Error) {
           error(e.message);
-          message.error(`Error to get data from server: ${e.message}`);
+          messageIfVisible(`error`, `Error to get data from server: ${e.message}`);
         }
       } finally {
         invoke('close_splashscreen');

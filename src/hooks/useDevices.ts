@@ -5,6 +5,7 @@ import { message } from "antd";
 import { AxiosError } from "axios";
 import testDevices from "../components/Tray/TestDevices";
 import { trace } from "tauri-plugin-log-api";
+import { messageIfVisible } from "../Utils";
 
 export const useDevices = (token: string, refreshKey: number) => {
   const [devices, setDevices] = useState<Device[]>([]);
@@ -23,7 +24,8 @@ export const useDevices = (token: string, refreshKey: number) => {
         trace('Devices fetched');
         setDevices(result);
       } catch (error) {
-        message.error(
+        messageIfVisible(
+          `error`,
           `Failed to fetch devices: ${(error as AxiosError).message}`
         );
       } finally {
